@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Project = require('../models/Project');
 const JoinRequest = require('../models/JoinRequest');
+const User = require('../models/User');
 const { protect } = require('../middleware/auth');
 const { upload, projectUpload, projectFileUpload } = require('../middleware/upload');
+const { createNotification, buildJoinRequestEmail } = require('../utils/notify');
 
 // Helper: escape special regex characters to prevent ReDoS
 function escapeRegex(str) {
@@ -127,7 +129,7 @@ router.post('/:id/join', protect, async (req, res) => {
         const { reason } = req.body;
         if (!reason || !reason.trim()) return res.status(400).json({ message: 'Please provide a reason for joining' });
 
-        const project = await Project.findById(req.params.id);
+        const project = await Project.findById(req.params.id).populate('createdBy', 'username fullName email');
         if (!project) return res.status(404).json({ message: 'Project not found' });
 
         // Check if already a member
@@ -143,6 +145,35 @@ router.post('/:id/join', protect, async (req, res) => {
         await JoinRequest.create({
             type: 'project', targetId: req.params.id, userId: req.user._id, reason: reason.trim()
         });
+
+        // Notify the project creator (in-app + email)
+        const creator = project.createdBy;
+        if (creator && creator._id.toString() !== req.user._id.toString()) {
+            const emailHtml = buildJoinRequestEmail({
+                recipientName: creator.fullName || creator.username,
+                requesterName: req.user.fullName || req.user.username,
+                requesterEmail: req.user.email,
+                reason: reason.trim(),
+                targetName: project.name,
+                targetType: 'project',
+                targetLink: `/projects/${project._id}`,
+            });
+
+            createNotification({
+                userId: creator._id,
+                type: 'join_request_project',
+                title: 'New Project Join Request',
+                message: `${req.user.fullName || req.user.username} wants to join "${project.name}"`,
+                link: `/projects/${project._id}`,
+                meta: { requesterId: req.user._id, projectId: project._id, reason: reason.trim() },
+                email: {
+                    to: creator.email,
+                    subject: `📋 New join request for "${project.name}"`,
+                    html: emailHtml,
+                },
+            });
+        }
+
         res.status(201).json({ message: 'Join request sent successfully' });
     } catch (err) { res.status(500).json({ message: err.message }); }
 });

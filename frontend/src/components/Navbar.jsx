@@ -2,6 +2,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import NotificationDropdown from './NotificationDropdown';
 
 export default function Navbar() {
     const { user, logout } = useAuth();
@@ -110,6 +111,7 @@ export default function Navbar() {
                 {/* Auth + Theme Toggle */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     {themeToggleBtn}
+                    {user && <NotificationDropdown isLightHome={isLightHome} />}
                     {user ? (
                         <div style={{ position: 'relative' }} ref={dropRef}>
                             <button onClick={() => setDropOpen(!dropOpen)}
@@ -135,6 +137,7 @@ export default function Navbar() {
                                         <div style={{ fontSize: '0.75rem', color: theme.textFaint }}>@{user.username}</div>
                                     </div>
                                     {[{ to: '/dashboard', icon: 'fas fa-tachometer-alt', label: 'Dashboard' },
+                                    { to: '/notifications', icon: 'fas fa-bell', label: 'Notifications' },
                                     { to: '/profile', icon: 'fas fa-user', label: 'Profile' },
                                     { to: '/settings', icon: 'fas fa-cog', label: 'Settings' },
                                     ...(user?.userType === 'system_admin' ? [{ to: '/admin', icon: 'fas fa-shield-alt', label: 'Admin Panel' }] : []),

@@ -12,6 +12,9 @@ export default function Projects() {
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [loading, setLoading] = useState(true);
+    const [joinProjectId, setJoinProjectId] = useState(null);
+    const [joinReason, setJoinReason] = useState('');
+    const [joinSubmitting, setJoinSubmitting] = useState(false);
 
     useEffect(() => {
         api.get('/projects').then(r => setProjects(r.data)).catch(() => { }).finally(() => setLoading(false));
@@ -23,11 +26,26 @@ export default function Projects() {
         return matchSearch && matchStatus;
     });
 
-    const handleJoin = async (id) => {
-        try { await api.post(`/projects/${id}/join`); setProjects(prev => prev.map(p => p._id === id ? { ...p, members: [...(p.members || []), user._id] } : p)); } catch (err) { alert(err.response?.data?.message || 'Error'); }
+    const handleJoin = (id) => {
+        setJoinProjectId(id);
+        setJoinReason('');
     };
 
-    const statusColors = { active: { bg: '#d1fae5', text: '#065f46' }, planning: { bg: '#fef3c7', text: '#92400e' }, completed: { bg: '#e0e7ff', text: '#3730a3' } };
+    const handleJoinSubmit = async () => {
+        if (!joinReason.trim()) return;
+        setJoinSubmitting(true);
+        try {
+            await api.post(`/projects/${joinProjectId}/join`, { reason: joinReason.trim() });
+            setProjects(prev => prev.map(p => p._id === joinProjectId ? { ...p, members: [...(p.members || []), user._id] } : p));
+            setJoinProjectId(null);
+            setJoinReason('');
+        } catch (err) {
+            alert(err.response?.data?.message || 'Error');
+        }
+        setJoinSubmitting(false);
+    };
+
+    const statusColors = { active: { bg: '#d1fae5', text: '#065f46' }, planning: { bg: '#fef3c7', text: '#92400e' }, completed: { bg: '#e0e7ff', text: '#3730a3' }, in_progress: { bg: '#dbeafe', text: '#1e40af' }, on_hold: { bg: '#fce7f3', text: '#9d174d' } };
     const card = { background: theme.bgCard, borderRadius: '16px', overflow: 'hidden', boxShadow: theme.shadow, transition: 'transform 0.2s', border: `1px solid ${theme.border}` };
 
     return (
@@ -46,6 +64,8 @@ export default function Projects() {
                         <option value="">All Statuses</option>
                         <option value="active">Active</option>
                         <option value="planning">Planning</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="on_hold">On Hold</option>
                         <option value="completed">Completed</option>
                     </select>
                 </div>
@@ -111,6 +131,37 @@ export default function Projects() {
                     </div>
                 )}
             </div>
+
+            {/* Join Reason Modal */}
+            {joinProjectId && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
+                    onClick={() => setJoinProjectId(null)}>
+                    <div style={{ background: theme.bgCard, borderRadius: '16px', padding: '2rem', width: '90%', maxWidth: '450px', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}
+                        onClick={e => e.stopPropagation()}>
+                        <h3 style={{ color: theme.text, fontWeight: '700', marginBottom: '0.5rem', fontSize: '1.15rem' }}>
+                            <i className="fas fa-paper-plane" style={{ color: theme.accent, marginRight: '0.5rem' }}></i>Request to Join
+                        </h3>
+                        <p style={{ color: theme.textMuted, fontSize: '0.9rem', marginBottom: '1rem' }}>Tell the project creator why you'd like to join.</p>
+                        <textarea
+                            value={joinReason}
+                            onChange={e => setJoinReason(e.target.value)}
+                            placeholder="Why do you want to join this project?"
+                            rows={4}
+                            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: `1px solid ${theme.border}`, background: theme.bgInput, color: theme.text, fontSize: '0.95rem', resize: 'vertical', outline: 'none', boxSizing: 'border-box' }}
+                        />
+                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
+                            <button onClick={() => setJoinProjectId(null)}
+                                style={{ padding: '0.6rem 1.25rem', borderRadius: '8px', border: `1px solid ${theme.border}`, background: 'transparent', color: theme.text, cursor: 'pointer', fontWeight: '600' }}>
+                                Cancel
+                            </button>
+                            <button onClick={handleJoinSubmit} disabled={!joinReason.trim() || joinSubmitting}
+                                style={{ padding: '0.6rem 1.25rem', borderRadius: '8px', border: 'none', background: theme.accent, color: '#fff', cursor: 'pointer', fontWeight: '600', opacity: (!joinReason.trim() || joinSubmitting) ? 0.5 : 1 }}>
+                                {joinSubmitting ? 'Sending...' : 'Send Request'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

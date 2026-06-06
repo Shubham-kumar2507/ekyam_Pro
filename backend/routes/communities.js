@@ -6,6 +6,7 @@ const JoinRequest = require('../models/JoinRequest');
 const User = require('../models/User');
 const { protect } = require('../middleware/auth');
 const { upload, communityUpload } = require('../middleware/upload');
+const { createNotification, buildJoinRequestEmail } = require('../utils/notify');
 
 // Helper: escape special regex characters to prevent ReDoS
 function escapeRegex(str) {
@@ -112,7 +113,7 @@ router.post('/:id/join', protect, async (req, res) => {
         const { reason } = req.body;
         if (!reason || !reason.trim()) return res.status(400).json({ message: 'Please provide a reason for joining' });
 
-        const community = await Community.findById(req.params.id);
+        const community = await Community.findById(req.params.id).populate('adminId', 'username fullName email');
         if (!community) return res.status(404).json({ message: 'Community not found' });
 
         // Check if already a member
@@ -120,7 +121,7 @@ router.post('/:id/join', protect, async (req, res) => {
         if (existing) return res.status(400).json({ message: 'Already a member' });
 
         // Check if admin
-        if (community.adminId.toString() === req.user._id.toString())
+        if (community.adminId._id.toString() === req.user._id.toString())
             return res.status(400).json({ message: 'You are the admin of this community' });
 
         // Check if already has a pending request
@@ -132,6 +133,35 @@ router.post('/:id/join', protect, async (req, res) => {
         await JoinRequest.create({
             type: 'community', targetId: req.params.id, userId: req.user._id, reason: reason.trim()
         });
+
+        // Notify the community admin (in-app + email)
+        const admin = community.adminId;
+        if (admin && admin._id.toString() !== req.user._id.toString()) {
+            const emailHtml = buildJoinRequestEmail({
+                recipientName: admin.fullName || admin.username,
+                requesterName: req.user.fullName || req.user.username,
+                requesterEmail: req.user.email,
+                reason: reason.trim(),
+                targetName: community.name,
+                targetType: 'community',
+                targetLink: `/communities/${community._id}`,
+            });
+
+            createNotification({
+                userId: admin._id,
+                type: 'join_request_community',
+                title: 'New Community Join Request',
+                message: `${req.user.fullName || req.user.username} wants to join "${community.name}"`,
+                link: `/communities/${community._id}`,
+                meta: { requesterId: req.user._id, communityId: community._id, reason: reason.trim() },
+                email: {
+                    to: admin.email,
+                    subject: `👥 New join request for "${community.name}"`,
+                    html: emailHtml,
+                },
+            });
+        }
+
         res.status(201).json({ message: 'Join request sent successfully' });
     } catch (err) { res.status(500).json({ message: err.message }); }
 });

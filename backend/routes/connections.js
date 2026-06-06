@@ -3,6 +3,7 @@ const router = express.Router();
 const Connection = require('../models/Connection');
 const User = require('../models/User');
 const { protect } = require('../middleware/auth');
+const { createNotification } = require('../utils/notify');
 
 // POST follow a user (instant – no approval needed)
 router.post('/follow/:userId', protect, async (req, res) => {
@@ -25,6 +26,16 @@ router.post('/follow/:userId', protect, async (req, res) => {
             following: req.params.userId,
             type: 'follow',
             status: 'accepted'
+        });
+
+        // Notify the target user
+        createNotification({
+            userId: req.params.userId,
+            type: 'new_follower',
+            title: 'New Follower',
+            message: `${req.user.fullName || req.user.username} started following you`,
+            link: `/users/${req.user._id}`,
+            meta: { followerId: req.user._id },
         });
 
         res.status(201).json({ message: 'Followed successfully' });
@@ -78,6 +89,17 @@ router.post('/connect/:userId', protect, async (req, res) => {
             existingFollow.type = 'connect';
             existingFollow.status = 'pending';
             await existingFollow.save();
+
+            // Notify the target user
+            createNotification({
+                userId: req.params.userId,
+                type: 'connection_request',
+                title: 'Connection Request',
+                message: `${req.user.fullName || req.user.username} sent you a connection request`,
+                link: `/network`,
+                meta: { requesterId: req.user._id },
+            });
+
             return res.status(200).json({ message: 'Connect request sent (upgraded from follow)' });
         }
 
@@ -86,6 +108,16 @@ router.post('/connect/:userId', protect, async (req, res) => {
             following: req.params.userId,
             type: 'connect',
             status: 'pending'
+        });
+
+        // Notify the target user
+        createNotification({
+            userId: req.params.userId,
+            type: 'connection_request',
+            title: 'Connection Request',
+            message: `${req.user.fullName || req.user.username} sent you a connection request`,
+            link: `/network`,
+            meta: { requesterId: req.user._id },
         });
 
         res.status(201).json({ message: 'Connect request sent' });
@@ -130,6 +162,16 @@ router.put('/respond/:connectionId', protect, async (req, res) => {
             }
 
             res.json({ message: 'Connection accepted' });
+
+            // Notify the requester that their request was accepted
+            createNotification({
+                userId: connection.follower,
+                type: 'connection_accepted',
+                title: 'Connection Accepted',
+                message: `${req.user.fullName || req.user.username} accepted your connection request`,
+                link: `/users/${req.user._id}`,
+                meta: { accepterId: req.user._id },
+            });
         } else {
             connection.status = 'rejected';
             await connection.save();

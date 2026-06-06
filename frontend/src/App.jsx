@@ -43,6 +43,7 @@ const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
 const AdminPanel = lazy(() => import('./pages/AdminPanel'));
+const Notifications = lazy(() => import('./pages/Notifications'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 
@@ -166,6 +167,7 @@ function App() {
                                     <Route path="/communities/:id/members" element={<ProtectedRoute><CommunityMembers /></ProtectedRoute>} />
                                     <Route path="/feed" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
                                     <Route path="/network" element={<ProtectedRoute><MyNetwork /></ProtectedRoute>} />
+                                    <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
                                     <Route path="/admin" element={<AdminRoute><AdminPanel /></AdminRoute>} />
                                     <Route path="/users/:id" element={<UserPublicProfile />} />
 

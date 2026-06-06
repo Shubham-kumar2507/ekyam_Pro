@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Resource = require('../models/Resource');
+const Community = require('../models/Community');
 const { protect } = require('../middleware/auth');
 const { upload, resourceUpload } = require('../middleware/upload');
+const { createNotification } = require('../utils/notify');
 
 // Helper: escape special regex characters to prevent ReDoS
 function escapeRegex(str) {
@@ -89,6 +91,24 @@ router.post('/', protect, resourceUpload, upload.fields([{ name: 'file', maxCoun
         }
 
         const resource = await Resource.create(resourceData);
+
+        // Notify community admin if resource is shared in a community
+        if (resource.communityId) {
+            try {
+                const community = await Community.findById(resource.communityId);
+                if (community && community.adminId.toString() !== req.user._id.toString()) {
+                    createNotification({
+                        userId: community.adminId,
+                        type: 'resource_shared',
+                        title: 'New Resource Shared',
+                        message: `${req.user.fullName || req.user.username} shared "${resource.title}" in ${community.name}`,
+                        link: `/resources/${resource._id}`,
+                        meta: { resourceId: resource._id, communityId: community._id },
+                    });
+                }
+            } catch { /* silent */ }
+        }
+
         res.status(201).json(resource);
     } catch (err) { res.status(500).json({ message: err.message }); }
 });

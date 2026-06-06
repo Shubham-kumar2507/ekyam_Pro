@@ -79,6 +79,7 @@ app.use('/api/events', require('./routes/communityEvents'));
 app.use('/api/posts', require('./routes/posts'));
 app.use('/api/connections', require('./routes/connections'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/notifications', require('./routes/notifications'));
 
 // ─── Health Check ───
 app.get('/api', (req, res) => res.json({ message: 'Ekyam API is running', env: process.env.NODE_ENV }));
