@@ -564,6 +564,7 @@ For questions, issues, or suggestions:
 - **Backend**: Gzip compression, Response caching, Rate limiting
 - **Database**: Indexed queries, Connection pooling
 - **Deployment**: CDN via Vercel (frontend), Auto-scaling on Render (backend)
+<<<<<<< HEAD
 
 ---
 
@@ -574,3 +575,5 @@ For questions, issues, or suggestions:
 Star ⭐ this repository if you find it useful!
 
 </div>
+=======
+>>>>>>> 8dff6a34b730829683bbbfdb7da556d1f511d6b2
