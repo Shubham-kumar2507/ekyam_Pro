@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/api';
 import { getMediaUrl } from '../utils/media';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../context/useTheme';
 
 /* ═══════════════════════════════════════════
    GLOBAL STYLES

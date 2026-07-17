@@ -29,7 +29,7 @@ export default function CommunityMembers() {
                     setAdmin(c.adminId);
                 }
                 if (mRes.status === 'fulfilled') setMembers(mRes.value.data);
-            } catch { }
+            } catch { /* silently ignore */ }
             setLoading(false);
         };
         fetchData();
@@ -44,7 +44,7 @@ export default function CommunityMembers() {
             }));
             setSuccess('Member role updated successfully.');
             setTimeout(() => setSuccess(''), 3000);
-        } catch { }
+        } catch { /* silently ignore */ }
     };
 
     const handleRemove = async (userId) => {
@@ -54,7 +54,7 @@ export default function CommunityMembers() {
             setMembers(prev => prev.filter(m => (m.userId?._id || m.userId) !== userId));
             setSuccess('Member removed successfully.');
             setTimeout(() => setSuccess(''), 3000);
-        } catch { }
+        } catch { /* silently ignore */ }
     };
 
     const imgUrl = (img) => getMediaUrl(img);

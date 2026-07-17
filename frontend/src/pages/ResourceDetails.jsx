@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import { getMediaUrl } from '../utils/media';
 
@@ -16,7 +16,7 @@ export default function ResourceDetails() {
 
     useEffect(() => {
         api.get(`/resources/${id}`).then(r => setResource(r.data)).catch(() => navigate('/resources')).finally(() => setLoading(false));
-    }, [id]);
+    }, [id, navigate]);
 
     const handleDownload = async () => {
         try {

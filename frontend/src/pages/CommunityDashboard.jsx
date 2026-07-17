@@ -48,7 +48,7 @@ export default function CommunityDashboard() {
                 if (eRes.status === 'fulfilled') setEvents(eRes.value.data);
                 if (pRes.status === 'fulfilled') setProjects(pRes.value.data);
                 if (rRes.status === 'fulfilled') setResources(rRes.value.data);
-            } catch { }
+            } catch { /* silently ignore */ }
             setLoading(false);
         };
         fetchAll();
@@ -61,7 +61,7 @@ export default function CommunityDashboard() {
             setEvents(prev => [...prev, res.data].sort((a, b) => new Date(a.startDate) - new Date(b.startDate)));
             setShowEventModal(false);
             setEventForm({ title: '', description: '', startDate: '', endDate: '', location: '', eventType: 'meeting' });
-        } catch { }
+        } catch { /* silently ignore */ }
     };
 
     const handleDeleteEvent = async (eventId) => {
@@ -69,7 +69,7 @@ export default function CommunityDashboard() {
         try {
             await api.delete(`/events/${id}/events/${eventId}`);
             setEvents(prev => prev.filter(e => e._id !== eventId));
-        } catch { }
+        } catch { /* silently ignore */ }
     };
 
     const imgUrl = (img) => getMediaUrl(img);

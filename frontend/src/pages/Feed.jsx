@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import PostCard from '../components/PostCard';
 import { getMediaUrl } from '../utils/media';

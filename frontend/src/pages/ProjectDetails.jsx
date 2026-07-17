@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import PostCard from '../components/PostCard';
 import { getMediaUrl } from '../utils/media';
@@ -28,7 +28,7 @@ export default function ProjectDetails() {
     useEffect(() => {
         api.get(`/projects/${id}`).then(r => setProject(r.data)).catch(() => navigate('/projects')).finally(() => setLoading(false));
         api.get(`/posts/project/${id}`).then(r => setPosts(r.data || [])).catch(() => { });
-    }, [id]);
+    }, [id, navigate]);
 
     // Fetch user's own join request status
     useEffect(() => {

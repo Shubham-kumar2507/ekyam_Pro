@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 
 const TABS = [

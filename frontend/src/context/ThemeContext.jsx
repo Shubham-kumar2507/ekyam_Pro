@@ -143,6 +143,3 @@ export function ThemeProvider({ children }) {
         </ThemeContext.Provider>
     );
 }
-
-// Re-export useTheme for backwards compatibility
-export { useTheme } from './useTheme';

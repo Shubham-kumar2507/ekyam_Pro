@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import PostCard from '../components/PostCard';
 import { getMediaUrl } from '../utils/media';
@@ -20,11 +20,7 @@ export default function UserPublicProfile() {
     const [followers, setFollowers] = useState([]);
     const [following, setFollowing] = useState([]);
 
-    useEffect(() => {
-        fetchProfile();
-    }, [id]);
-
-    const fetchProfile = async () => {
+    const fetchProfile = useCallback(async () => {
         setLoading(true);
         try {
             const [profileRes, postsRes] = await Promise.all([
@@ -40,7 +36,11 @@ export default function UserPublicProfile() {
             }
         } catch (err) { console.error(err); }
         setLoading(false);
-    };
+    }, [id, user]);
+
+    useEffect(() => {
+        fetchProfile();
+    }, [fetchProfile]);
 
     const fetchFollowers = async () => {
         try {

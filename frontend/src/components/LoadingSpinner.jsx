@@ -1,4 +1,4 @@
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../context/useTheme';
 
 const defaultTheme = { bg: '#f3f4f6', accent: '#4f46e5', textFaint: '#9ca3af' };
 

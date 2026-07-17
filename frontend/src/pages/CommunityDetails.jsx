@@ -89,7 +89,7 @@ export default function CommunityDetails() {
         } catch (err) { alert(err.response?.data?.message || 'Error'); }
     };
 
-    const handleLeave = async () => { if (!confirm('Leave this community?')) return; try { await api.post(`/communities/${id}/leave`); setIsMember(false); } catch { } };
+    const handleLeave = async () => { if (!confirm('Leave this community?')) return; try { await api.post(`/communities/${id}/leave`); setIsMember(false); } catch { /* silently ignore */ } };
 
     if (loading) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}><i className="fas fa-spinner fa-spin" style={{ fontSize: '2rem', color: '#3c6e71' }}></i></div>;
     if (!community) return null;

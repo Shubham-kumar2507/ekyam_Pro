@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import UserCard from '../components/UserCard';
 import { getMediaUrl } from '../utils/media';
@@ -18,11 +18,7 @@ export default function MyNetwork() {
     const [loading, setLoading] = useState(true);
     const [searchLoading, setSearchLoading] = useState(false);
 
-    useEffect(() => {
-        if (user) fetchData();
-    }, [user]);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setLoading(true);
         try {
             const [followersRes, followingRes, requestsRes] = await Promise.all([
@@ -35,7 +31,11 @@ export default function MyNetwork() {
             setRequests(requestsRes.data);
         } catch (err) { console.error(err); }
         setLoading(false);
-    };
+    }, [user]);
+
+    useEffect(() => {
+        if (user) fetchData();
+    }, [user, fetchData]);
 
     const handleSearch = async (q) => {
         setSearchQuery(q);
