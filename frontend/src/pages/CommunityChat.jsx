@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/api';
@@ -16,12 +16,12 @@ export default function CommunityChat() {
     const messagesEndRef = useRef(null);
     const intervalRef = useRef(null);
 
-    const fetchMessages = async () => {
+    const fetchMessages = useCallback(async () => {
         try {
             const res = await api.get(`/chat/${id}/messages`);
             setMessages(res.data);
-        } catch { }
-    };
+        } catch { /* silently ignore */ }
+    }, [id]);
 
     useEffect(() => {
         const init = async () => {
@@ -33,13 +33,13 @@ export default function CommunityChat() {
                 if (cRes.status === 'fulfilled') setCommunity(cRes.value.data);
                 if (mRes.status === 'fulfilled') setMembers(mRes.value.data);
                 await fetchMessages();
-            } catch { }
+            } catch { /* silently ignore */ }
             setLoading(false);
         };
         init();
         intervalRef.current = setInterval(fetchMessages, 15000);
         return () => clearInterval(intervalRef.current);
-    }, [id]);
+    }, [id, fetchMessages]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -52,7 +52,7 @@ export default function CommunityChat() {
             const res = await api.post(`/chat/${id}/messages`, { message: newMessage });
             setMessages(prev => [...prev, res.data]);
             setNewMessage('');
-        } catch { }
+        } catch { /* silently ignore */ }
     };
 
     const imgUrl = (img) => getMediaUrl(img);

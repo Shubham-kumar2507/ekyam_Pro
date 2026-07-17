@@ -52,7 +52,7 @@ export default function CommunityDashboard() {
             setLoading(false);
         };
         fetchAll();
-    }, [id]);
+    }, [id, navigate, user]);
 
     const handleCreateEvent = async (e) => {
         e.preventDefault();

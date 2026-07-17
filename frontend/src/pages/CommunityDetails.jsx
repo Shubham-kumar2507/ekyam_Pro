@@ -44,7 +44,7 @@ export default function CommunityDetails() {
             setLoading(false);
         };
         fetchData();
-    }, [id]);
+    }, [id, navigate, user]);
 
     // Fetch user's own join request status
     useEffect(() => {

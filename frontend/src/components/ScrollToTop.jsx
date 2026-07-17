@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useTheme } from '../context/ThemeContext';
 
 export default function ScrollToTop() {
-    const { theme } = useTheme();
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {

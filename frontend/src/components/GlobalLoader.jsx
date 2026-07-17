@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
+const defaultTheme = { bg: '#f3f4f6', accent: '#4f46e5', textFaint: '#9ca3af', textSecondary: '#4b5563', bgCard: '#ffffff', border: '#e5e7eb' };
+
 export default function GlobalLoader() {
     const [isVisible, setIsVisible] = useState(false);
-    let theme;
-    try { theme = useTheme().theme; } catch { theme = { bg: '#f3f4f6', accent: '#4f46e5', textFaint: '#9ca3af', textSecondary: '#4b5563', bgCard: '#ffffff', border: '#e5e7eb' }; }
+    const result = useTheme();
+    const theme = result?.theme || defaultTheme;
 
     useEffect(() => {
         let activeRequests = 0;

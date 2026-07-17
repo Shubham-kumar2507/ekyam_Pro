@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 
-const ThemeContext = createContext();
+export const ThemeContext = createContext();
 
 // Light and dark color palettes
 const themes = {
@@ -144,8 +144,5 @@ export function ThemeProvider({ children }) {
     );
 }
 
-export function useTheme() {
-    const ctx = useContext(ThemeContext);
-    if (!ctx) throw new Error('useTheme must be used within ThemeProvider');
-    return ctx;
-}
+// Re-export useTheme for backwards compatibility
+export { useTheme } from './useTheme';

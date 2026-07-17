@@ -1,8 +1,10 @@
 import { useTheme } from '../context/ThemeContext';
 
+const defaultTheme = { bg: '#f3f4f6', accent: '#4f46e5', textFaint: '#9ca3af' };
+
 export default function LoadingSpinner() {
-    let theme;
-    try { theme = useTheme().theme; } catch { theme = { bg: '#f3f4f6', accent: '#4f46e5', textFaint: '#9ca3af' }; }
+    const result = useTheme();
+    const theme = result?.theme || defaultTheme;
 
     return (
         <div style={{

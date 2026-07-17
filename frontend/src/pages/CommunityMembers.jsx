@@ -33,7 +33,7 @@ export default function CommunityMembers() {
             setLoading(false);
         };
         fetchData();
-    }, [id]);
+    }, [id, navigate, user]);
 
     const handleUpdateRole = async (userId, newRole) => {
         try {

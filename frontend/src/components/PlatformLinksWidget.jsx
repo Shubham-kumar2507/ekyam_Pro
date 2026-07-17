@@ -56,7 +56,8 @@ export default function PlatformLinksWidget({ socialLinks, theme, showStats = tr
         if (showStats && connectedPlatforms.some(p => p.hasStats)) {
             fetchAllStats();
         }
-    }, [socialLinks]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socialLinks, showStats]);
 
     const fetchAllStats = async (forceRefresh = false) => {
         setLoadingStats(true);

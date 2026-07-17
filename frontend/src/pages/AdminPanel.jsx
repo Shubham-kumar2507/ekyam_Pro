@@ -111,7 +111,7 @@ export default function AdminPanel() {
         else if (activeTab === 'resources') fetchResources();
         else if (activeTab === 'users') fetchUsers();
         else if (activeTab === 'dashboard') fetchStats();
-    }, [activeTab]);
+    }, [activeTab, fetchProjects, fetchResources, fetchStats, fetchUsers]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -120,7 +120,7 @@ export default function AdminPanel() {
             else if (activeTab === 'users') fetchUsers();
         }, 300);
         return () => clearTimeout(timer);
-    }, [searchTerm, statusFilter, typeFilter, featuredFilter]);
+    }, [searchTerm, statusFilter, typeFilter, featuredFilter, activeTab, fetchProjects, fetchResources, fetchUsers]);
 
     // ─── Actions ───
     const toggleFeatured = async (id) => {

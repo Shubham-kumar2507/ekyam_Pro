@@ -564,7 +564,17 @@ For questions, issues, or suggestions:
 - **Backend**: Gzip compression, Response caching, Rate limiting
 - **Database**: Indexed queries, Connection pooling
 - **Deployment**: CDN via Vercel (frontend), Auto-scaling on Render (backend)
-<<<<<<< HEAD
+
+---
+
+<div align="center">
+
+**Made with ❤️ by the Ekyam Community**
+
+Star ⭐ this repository if you find it useful!
+
+</div>
+
 
 ---
 

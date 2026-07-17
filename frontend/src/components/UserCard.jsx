@@ -18,11 +18,11 @@ export default function UserCard({ userInfo, initialStatus, onStatusChange }) {
             try {
                 const res = await api.get(`/connections/status/${userInfo._id}`);
                 if (!cancelled) setStatus(res.data.status || 'none');
-            } catch (err) { /* ignore */ }
+            } catch { /* ignore */ }
         };
         fetchStatus();
         return () => { cancelled = true; };
-    }, [user, userInfo?._id]);
+    }, [user, userInfo]);
 
     const isSelf = user && userInfo && user._id === userInfo._id;
 

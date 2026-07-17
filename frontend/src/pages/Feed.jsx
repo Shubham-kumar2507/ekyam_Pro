@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -25,15 +25,7 @@ export default function Feed() {
     const [communities, setCommunities] = useState([]);
     const [showCreateForm, setShowCreateForm] = useState(!!urlProject);
 
-    useEffect(() => {
-        fetchPosts();
-        if (user) {
-            api.get('/projects/my').then(r => setProjects(r.data)).catch(() => { });
-            api.get('/communities').then(r => setCommunities(r.data)).catch(() => { });
-        }
-    }, [tab]);
-
-    const fetchPosts = async () => {
+    const fetchPosts = useCallback(async () => {
         setLoading(true);
         try {
             let res;
@@ -42,7 +34,15 @@ export default function Feed() {
             else { res = await api.get('/posts/all'); setPosts(res.data.posts || []); }
         } catch (err) { console.error(err); }
         setLoading(false);
-    };
+    }, [tab, user]);
+
+    useEffect(() => {
+        fetchPosts();
+        if (user) {
+            api.get('/projects/my').then(r => setProjects(r.data)).catch(() => { });
+            api.get('/communities').then(r => setCommunities(r.data)).catch(() => { });
+        }
+    }, [fetchPosts, user]);
 
     const handleFileChange = (e) => {
         const selected = Array.from(e.target.files).slice(0, 5);

@@ -15,7 +15,7 @@ function timeAgo(date) {
     return new Date(date).toLocaleDateString();
 }
 
-export default function PostCard({ post, onDelete, onUpdate }) {
+export default function PostCard({ post, onDelete, onUpdate: _onUpdate }) {
     const { user } = useAuth();
     const { theme } = useTheme();
     const [liked, setLiked] = useState(post.likes?.includes(user?._id));
