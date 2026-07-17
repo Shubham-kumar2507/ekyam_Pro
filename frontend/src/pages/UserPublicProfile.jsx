@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import api from '../api/api';
 import PostCard from '../components/PostCard';
 import { getMediaUrl } from '../utils/media';
+import PlatformLinksWidget from '../components/PlatformLinksWidget';
 
 export default function UserPublicProfile() {
     const { id } = useParams();
     const { user } = useAuth();
+    const { theme } = useTheme();
     const [profile, setProfile] = useState(null);
     const [posts, setPosts] = useState([]);
     const [status, setStatus] = useState('none'); // none, following, connected, pending
@@ -118,10 +121,10 @@ export default function UserPublicProfile() {
 
     const tabBtn = (active) => ({
         padding: '0.55rem 1.2rem', border: 'none', borderRadius: '10px',
-        background: active ? '#fff' : 'transparent',
-        color: active ? '#4f46e5' : '#9ca3af',
+        background: active ? theme.tabActiveBg : 'transparent',
+        color: active ? theme.tabActiveText : theme.tabInactiveText,
         fontWeight: '600', fontSize: '0.88rem', cursor: 'pointer',
-        boxShadow: active ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
+        boxShadow: active ? theme.shadow : 'none',
         transition: 'all 0.2s'
     });
 
@@ -138,9 +141,9 @@ export default function UserPublicProfile() {
             to={`/users/${u._id}`}
             style={{
                 display: 'flex', alignItems: 'center', gap: '0.75rem',
-                padding: '0.75rem 1rem', background: '#fff', borderRadius: '12px',
+                padding: '0.75rem 1rem', background: theme.bgCard, borderRadius: '12px',
                 textDecoration: 'none', color: 'inherit',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.04)', transition: 'transform 0.2s'
+                boxShadow: theme.shadow, transition: 'transform 0.2s'
             }}
             onMouseOver={e => e.currentTarget.style.transform = 'translateY(-1px)'}
             onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}
@@ -157,17 +160,17 @@ export default function UserPublicProfile() {
                     : u.fullName?.[0] || '?'}
             </div>
             <div>
-                <div style={{ fontWeight: '600', fontSize: '0.9rem' }}>{u.fullName}</div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>@{u.username}</div>
+                <div style={{ fontWeight: '600', fontSize: '0.9rem', color: theme.text }}>{u.fullName}</div>
+                <div style={{ fontSize: '0.75rem', color: theme.textFaint }}>@{u.username}</div>
             </div>
         </Link>
     );
 
     return (
-        <div style={{ minHeight: '100vh', background: '#f3f4f6' }}>
+        <div style={{ minHeight: '100vh', background: theme.bg }}>
             {/* Profile Header */}
             <div style={{
-                background: 'linear-gradient(135deg, #312e81 0%, #4338ca 50%, #6366f1 100%)',
+                background: theme.heroBg,
                 color: '#fff', padding: '3rem 1rem 4rem', textAlign: 'center', position: 'relative'
             }}>
                 <div style={avatarStyle}>
@@ -184,6 +187,13 @@ export default function UserPublicProfile() {
                 )}
                 {profile.bio && (
                     <p style={{ opacity: 0.85, maxWidth: '500px', margin: '0.5rem auto 0', lineHeight: '1.6', fontSize: '0.92rem' }}>{profile.bio}</p>
+                )}
+
+                {/* Social Platform Icons */}
+                {profile.socialLinks && Object.values(profile.socialLinks).some(v => v) && (
+                    <div style={{ marginTop: '0.75rem' }}>
+                        <PlatformLinksWidget socialLinks={profile.socialLinks} theme={theme} compact={true} />
+                    </div>
                 )}
 
                 {/* Stats */}
@@ -238,22 +248,25 @@ export default function UserPublicProfile() {
                 {/* Tabs */}
                 <div style={{
                     display: 'flex', gap: '0.25rem', marginBottom: '1.25rem',
-                    background: '#e5e7eb', borderRadius: '12px', padding: '4px'
+                    background: theme.bgMuted, borderRadius: '12px', padding: '4px'
                 }}>
                     <button onClick={() => handleTabChange('posts')} style={tabBtn(activeTab === 'posts')}>📝 Posts</button>
                     <button onClick={() => handleTabChange('followers')} style={tabBtn(activeTab === 'followers')}>👥 Followers</button>
                     <button onClick={() => handleTabChange('following')} style={tabBtn(activeTab === 'following')}>➡️ Following</button>
+                    {profile.socialLinks && Object.values(profile.socialLinks).some(v => v) && (
+                        <button onClick={() => handleTabChange('platforms')} style={tabBtn(activeTab === 'platforms')}>📊 Platforms</button>
+                    )}
                 </div>
 
                 {activeTab === 'posts' && (
                     posts.length === 0 ? (
                         <div style={{
-                            textAlign: 'center', padding: '3rem', background: '#fff',
-                            borderRadius: '16px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+                            textAlign: 'center', padding: '3rem', background: theme.bgCard,
+                            borderRadius: '16px', boxShadow: theme.shadow
                         }}>
                             <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>📭</div>
-                            <h3 style={{ color: '#1f2937', fontWeight: '700', marginBottom: '0.5rem' }}>No posts yet</h3>
-                            <p style={{ color: '#9ca3af', fontSize: '0.9rem' }}>
+                            <h3 style={{ color: theme.text, fontWeight: '700', marginBottom: '0.5rem' }}>No posts yet</h3>
+                            <p style={{ color: theme.textFaint, fontSize: '0.9rem' }}>
                                 {isSelf ? 'Share your first project update!' : 'This user hasn\'t posted yet.'}
                             </p>
                         </div>
@@ -263,7 +276,7 @@ export default function UserPublicProfile() {
                 {activeTab === 'followers' && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                         {followers.length === 0 ? (
-                            <div style={{ textAlign: 'center', padding: '2rem', color: '#9ca3af' }}>No followers yet</div>
+                            <div style={{ textAlign: 'center', padding: '2rem', color: theme.textFaint }}>No followers yet</div>
                         ) : followers.map(u => userCardSmall(u))}
                     </div>
                 )}
@@ -271,8 +284,17 @@ export default function UserPublicProfile() {
                 {activeTab === 'following' && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                         {following.length === 0 ? (
-                            <div style={{ textAlign: 'center', padding: '2rem', color: '#9ca3af' }}>Not following anyone yet</div>
+                            <div style={{ textAlign: 'center', padding: '2rem', color: theme.textFaint }}>Not following anyone yet</div>
                         ) : following.map(u => userCardSmall(u))}
+                    </div>
+                )}
+
+                {activeTab === 'platforms' && (
+                    <div style={{
+                        background: theme.bgCard, borderRadius: '16px',
+                        boxShadow: theme.shadow, padding: '1.5rem',
+                    }}>
+                        <PlatformLinksWidget socialLinks={profile.socialLinks} theme={theme} showStats={true} />
                     </div>
                 )}
             </div>

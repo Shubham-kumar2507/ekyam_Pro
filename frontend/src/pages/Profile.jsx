@@ -10,6 +10,16 @@ export default function Profile() {
     const { theme } = useTheme();
     const fileRef = useRef(null);
     const [form, setForm] = useState({ fullName: user?.fullName || '', bio: user?.bio || '', location: user?.location || '' });
+    const [socialLinks, setSocialLinks] = useState({
+        linkedin: user?.socialLinks?.linkedin || '',
+        github: user?.socialLinks?.github || '',
+        leetcode: user?.socialLinks?.leetcode || '',
+        codeforces: user?.socialLinks?.codeforces || '',
+        twitter: user?.socialLinks?.twitter || '',
+        portfolio: user?.socialLinks?.portfolio || '',
+        kaggle: user?.socialLinks?.kaggle || '',
+        medium: user?.socialLinks?.medium || '',
+    });
     const [msg, setMsg] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -23,7 +33,7 @@ export default function Profile() {
     const handleSubmit = async (e) => {
         e.preventDefault(); setLoading(true); setMsg(''); setError('');
         try {
-            const { data } = await api.put('/users/profile', form);
+            const { data } = await api.put('/users/profile', { ...form, socialLinks });
             updateUser(data);
             setMsg('Profile updated successfully!');
         } catch (err) { setError(err.response?.data?.message || 'Error updating profile'); }
@@ -109,6 +119,90 @@ export default function Profile() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+
+                {/* Social Links Section */}
+                <div style={{ background: theme.bgCard, borderRadius: '8px', boxShadow: theme.shadow, overflow: 'hidden', border: `1px solid ${theme.border}`, marginTop: '1.5rem' }}>
+                    <div style={{ padding: '2rem' }}>
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: theme.text, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <i className="fas fa-link" style={{ color: theme.accentText }}></i>
+                            Connected Platforms
+                        </h2>
+                        <p style={{ color: theme.textMuted, fontSize: '0.85rem', marginBottom: '1.5rem' }}>Link your professional profiles to showcase your skills and activity</p>
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                            {[
+                                { key: 'linkedin', label: 'LinkedIn', icon: 'fab fa-linkedin', color: '#0A66C2', placeholder: 'https://linkedin.com/in/username' },
+                                { key: 'github', label: 'GitHub', icon: 'fab fa-github', color: theme.name === 'dark' ? '#f0f0f0' : '#333', placeholder: 'https://github.com/username' },
+                                { key: 'leetcode', label: 'LeetCode', icon: 'fas fa-code', color: '#FFA116', placeholder: 'https://leetcode.com/u/username' },
+                                { key: 'codeforces', label: 'Codeforces', icon: 'fas fa-trophy', color: '#1F8ACB', placeholder: 'https://codeforces.com/profile/handle' },
+                                { key: 'twitter', label: 'Twitter / X', icon: 'fab fa-twitter', color: '#1DA1F2', placeholder: 'https://x.com/username' },
+                                { key: 'portfolio', label: 'Portfolio', icon: 'fas fa-globe', color: '#6366f1', placeholder: 'https://yourwebsite.com' },
+                                { key: 'kaggle', label: 'Kaggle', icon: 'fas fa-chart-bar', color: '#20BEFF', placeholder: 'https://kaggle.com/username' },
+                                { key: 'medium', label: 'Medium', icon: 'fab fa-medium', color: theme.name === 'dark' ? '#fff' : '#000', placeholder: 'https://medium.com/@username' },
+                            ].map(platform => (
+                                <div key={platform.key} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                    <div style={{
+                                        width: '38px', height: '38px', borderRadius: '8px',
+                                        background: `${platform.color}15`,
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        flexShrink: 0,
+                                    }}>
+                                        <i className={platform.icon} style={{ color: platform.color, fontSize: '1rem' }}></i>
+                                    </div>
+                                    <div style={{ flex: 1 }}>
+                                        <label style={{ ...labelStyle, fontSize: '0.78rem', marginBottom: '0.15rem' }}>{platform.label}</label>
+                                        <input
+                                            type="text"
+                                            value={socialLinks[platform.key]}
+                                            onChange={e => setSocialLinks({ ...socialLinks, [platform.key]: e.target.value })}
+                                            placeholder={platform.placeholder}
+                                            style={{ ...inputStyle, marginTop: 0, padding: '0.55rem 0.75rem', fontSize: '0.85rem' }}
+                                        />
+                                    </div>
+                                    {socialLinks[platform.key] && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setSocialLinks({ ...socialLinks, [platform.key]: '' })}
+                                            style={{
+                                                background: 'none', border: 'none', cursor: 'pointer',
+                                                color: theme.textFaint, fontSize: '0.8rem', padding: '0.25rem',
+                                                alignSelf: 'flex-end', marginBottom: '0.3rem',
+                                            }}
+                                            title="Clear"
+                                        >
+                                            <i className="fas fa-times"></i>
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: `1px solid ${theme.borderLight || theme.border}`, display: 'flex', justifyContent: 'flex-end' }}>
+                            <button
+                                type="button"
+                                onClick={async () => {
+                                    setLoading(true); setMsg(''); setError('');
+                                    try {
+                                        const { data } = await api.put('/users/profile', { ...form, socialLinks });
+                                        updateUser(data);
+                                        setMsg('Social links saved successfully!');
+                                    } catch (err) { setError(err.response?.data?.message || 'Error saving links'); }
+                                    setLoading(false);
+                                }}
+                                disabled={loading}
+                                style={{
+                                    background: loading ? '#9ca3af' : theme.accent,
+                                    color: '#fff', padding: '0.65rem 1.5rem', border: 'none',
+                                    borderRadius: '8px', fontWeight: '600', cursor: loading ? 'not-allowed' : 'pointer',
+                                    fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.4rem',
+                                }}
+                            >
+                                <i className="fas fa-save"></i>
+                                {loading ? 'Saving...' : 'Save Links'}
+                            </button>
+                        </div>
                     </div>
                 </div>
 

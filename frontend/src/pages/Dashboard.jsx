@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import api from '../api/api';
 import { getMediaUrl } from '../utils/media';
+import PlatformLinksWidget from '../components/PlatformLinksWidget';
 
 export default function Dashboard() {
     const { user } = useAuth();
@@ -202,6 +203,9 @@ export default function Dashboard() {
                                 </Link>
                             </div>
                         </div>
+
+                        {/* Connected Platforms */}
+                        <PlatformLinksWidget socialLinks={user?.socialLinks} theme={theme} showStats={true} />
 
                         {/* Quick Actions */}
                         <div style={card}>

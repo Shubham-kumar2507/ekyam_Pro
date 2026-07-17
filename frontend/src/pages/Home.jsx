@@ -245,16 +245,224 @@ const GLOBAL_CSS = `
   @media (max-width: 600px) {
     .g4 { grid-template-columns: 1fr 1fr !important; }
   }
+
+  /* ── Leaderboard ── */
+  .lb-hero-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; }
+  .lb-hero-card {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 18px;
+    padding: 1.75rem 1.25rem 1.5rem; text-align: center; position: relative; overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.35s var(--ease-spring);
+  }
+  .lb-hero-card:hover { border-color: var(--accent-border); box-shadow: var(--shadow-lg); transform: translateY(-6px); }
+  .lb-hero-card.gold { border-color: rgba(251,191,36,0.3); }
+  .lb-hero-card.gold:hover { border-color: rgba(251,191,36,0.5); box-shadow: 0 8px 32px rgba(251,191,36,0.15); }
+  .lb-hero-card.silver { border-color: rgba(148,163,184,0.3); }
+  .lb-hero-card.bronze { border-color: rgba(251,146,60,0.3); }
+
+  .lb-medal {
+    position: absolute; top: 0.75rem; right: 0.75rem;
+    width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 900; font-family: var(--font-display);
+    color: #fff;
+  }
+  .lb-medal.gold { background: linear-gradient(135deg, #f59e0b, #eab308); box-shadow: 0 2px 8px rgba(245,158,11,0.4); }
+  .lb-medal.silver { background: linear-gradient(135deg, #94a3b8, #64748b); box-shadow: 0 2px 8px rgba(148,163,184,0.4); }
+  .lb-medal.bronze { background: linear-gradient(135deg, #fb923c, #ea580c); box-shadow: 0 2px 8px rgba(251,146,60,0.4); }
+
+  .lb-avatar {
+    width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
+    border: 3px solid var(--border); margin: 0 auto 0.8rem;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .lb-hero-card:hover .lb-avatar { transform: scale(1.06); }
+  .lb-hero-card.gold .lb-avatar { border-color: rgba(251,191,36,0.5); }
+
+  .lb-avatar-placeholder {
+    width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 0.8rem;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    color: #fff; font-weight: 900; font-family: var(--font-display); font-size: 1.5rem;
+    border: 3px solid var(--border);
+  }
+
+  .lb-score {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    background: var(--accent-soft); border: 1px solid var(--accent-border);
+    border-radius: 100px; padding: 0.2rem 0.65rem;
+    font-size: 0.72rem; font-weight: 700; color: var(--accent-text);
+    margin-top: 0.5rem;
+  }
+
+  .lb-breakdown { display: flex; gap: 0.75rem; justify-content: center; margin-top: 0.7rem; flex-wrap: wrap; }
+  .lb-breakdown span { font-size: 0.68rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.2rem; }
+  .lb-breakdown i { font-size: 0.6rem; }
+
+  .lb-rest-list { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1.5rem; }
+  .lb-rest-item {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 0.85rem 1.25rem;
+    transition: border-color 0.25s, background 0.25s, transform 0.25s;
+  }
+  .lb-rest-item:hover { border-color: var(--border-hover); background: var(--bg-subtle); transform: translateX(4px); }
+
+  .lb-rank-badge {
+    width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-family: var(--font-display); font-size: 0.82rem;
+    background: var(--bg-subtle); color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .lb-rest-avatar {
+    width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+    border: 2px solid var(--border);
+  }
+  .lb-rest-avatar-placeholder {
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    color: #fff; font-weight: 800; font-size: 0.82rem;
+  }
+
+  /* Project leaderboard */
+  .plb-list { display: flex; flex-direction: column; gap: 0.85rem; }
+  .plb-item {
+    display: flex; align-items: center; gap: 1.25rem;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.1rem 1.5rem;
+    text-decoration: none;
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.35s var(--ease-spring);
+  }
+  .plb-item:hover { border-color: var(--accent-border); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+
+  .plb-rank {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-family: var(--font-display); font-size: 0.9rem;
+    background: var(--accent-soft); color: var(--accent-text); border: 1px solid var(--accent-border);
+  }
+  .plb-rank.r1 { background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(234,179,8,0.08)); color: #d97706; border-color: rgba(251,191,36,0.3); }
+  .plb-rank.r2 { background: rgba(148,163,184,0.1); color: #64748b; border-color: rgba(148,163,184,0.3); }
+  .plb-rank.r3 { background: rgba(251,146,60,0.1); color: #ea580c; border-color: rgba(251,146,60,0.3); }
+
+  .plb-thumb {
+    width: 48px; height: 48px; border-radius: 12px; object-fit: cover; flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  .plb-thumb-placeholder {
+    width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--accent-soft), var(--bg-subtle));
+    color: var(--text-muted); font-size: 1rem;
+    border: 1px solid var(--border);
+  }
+
+  .plb-avatar-stack { display: flex; margin-top: 0.35rem; }
+  .plb-avatar-stack img, .plb-avatar-stack .plb-avs-ph {
+    width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--bg-surface);
+    margin-left: -6px; object-fit: cover;
+  }
+  .plb-avatar-stack img:first-child, .plb-avatar-stack .plb-avs-ph:first-child { margin-left: 0; }
+  .plb-avs-ph {
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-subtle); color: var(--text-muted); font-size: 0.55rem; font-weight: 700;
+  }
+
+  .plb-updates-pill {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    background: var(--accent-soft); border: 1px solid var(--accent-border);
+    border-radius: 100px; padding: 0.25rem 0.7rem;
+    font-size: 0.72rem; font-weight: 700; color: var(--accent-text);
+    white-space: nowrap;
+  }
+
+  /* ── Radial Progress Ring ── */
+  .lb-radial-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 0.75rem; }
+  .lb-radial-wrap svg { transform: rotate(-90deg); display: block; }
+  .lb-radial-bg { fill: none; stroke: var(--border); stroke-width: 5; }
+  .lb-radial-bar { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke-dashoffset 1.4s cubic-bezier(.22,1,.36,1); }
+  .lb-radial-avatar {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lb-radial-avatar img {
+    width: 60px; height: 60px; border-radius: 50%; object-fit: cover;
+    display: block;
+  }
+  .lb-radial-avatar .lb-avatar-initial {
+    width: 60px; height: 60px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    color: #fff; font-weight: 900; font-family: var(--font-display); font-size: 1.3rem;
+  }
+
+  /* ── Animated progress bars ── */
+  .lb-progress-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.35rem; }
+  .lb-progress-label { font-size: 0.62rem; color: var(--text-muted); width: 58px; text-align: right; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; }
+  .lb-progress-track {
+    flex: 1; height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; position: relative;
+  }
+  .lb-progress-fill {
+    height: 100%; border-radius: 3px; width: 0%;
+    transition: width 1.2s cubic-bezier(.22,1,.36,1);
+    position: relative;
+  }
+  .lb-progress-fill::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+    animation: shimmer 2s ease-in-out infinite;
+  }
+  @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+  .lb-progress-val { font-size: 0.6rem; color: var(--text-secondary); font-weight: 700; width: 20px; }
+
+  /* ── Activity mini chart ── */
+  .lb-chart { display: flex; align-items: flex-end; gap: 3px; height: 32px; margin-top: 0.5rem; justify-content: center; }
+  .lb-chart-bar {
+    width: 6px; border-radius: 3px 3px 0 0;
+    transition: height 1s cubic-bezier(.22,1,.36,1); opacity: 0.7;
+  }
+  .lb-chart-bar:hover { opacity: 1; }
+
+  /* ── Rest-item progress bar ── */
+  .lb-rest-progress { flex: 1; max-width: 120px; }
+  .lb-rest-track { height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; }
+  .lb-rest-fill { height: 100%; border-radius: 2px; transition: width 1s cubic-bezier(.22,1,.36,1); }
+
+  /* ── Project progress bar ── */
+  .plb-progress-wrap { margin-top: 0.4rem; }
+  .plb-progress-track { height: 5px; border-radius: 3px; background: var(--border); overflow: hidden; width: 100%; }
+  .plb-progress-fill {
+    height: 100%; border-radius: 3px; transition: width 1.2s cubic-bezier(.22,1,.36,1);
+    position: relative;
+  }
+  .plb-progress-fill::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: shimmer 2.5s ease-in-out infinite;
+  }
+  .plb-stats-row { display: flex; gap: 0.75rem; margin-top: 0.35rem; }
+  .plb-stat-mini { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; }
+  .plb-stat-mini-val { font-size: 0.85rem; font-weight: 900; font-family: var(--font-display); color: var(--text-primary); }
+  .plb-stat-mini-lbl { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .lb-hero-grid { grid-template-columns: 1fr !important; max-width: 360px; margin: 0 auto; }
+    .lb-rest-progress { display: none; }
+  }
 `;
 
 function StyleInjector() {
     useEffect(() => {
         const id = 'ek-home-css';
-        if (!document.getElementById(id)) {
-            const el = document.createElement('style');
-            el.id = id; el.textContent = GLOBAL_CSS;
+        let el = document.getElementById(id);
+        if (!el) {
+            el = document.createElement('style');
+            el.id = id;
             document.head.appendChild(el);
         }
+        el.textContent = GLOBAL_CSS;
     }, []);
     return null;
 }
@@ -532,6 +740,120 @@ function TestiCard({ t }) {
     );
 }
 
+/* ─── Radial Score Gauge ─── */
+function RadialProgress({ score, maxScore, color, size = 100, children }) {
+    const [animated, setAnimated] = useState(false);
+    const ref = useRef(null);
+    const r = (size - 12) / 2;
+    const circ = 2 * Math.PI * r;
+    const pct = Math.min(score / (maxScore || 1), 1);
+    const offset = circ * (1 - (animated ? pct : 0));
+
+    useEffect(() => {
+        const el = ref.current; if (!el) return;
+        const io = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) { setTimeout(() => setAnimated(true), 200); io.unobserve(el); }
+        }, { threshold: 0.3 });
+        io.observe(el);
+        return () => io.disconnect();
+    }, []);
+
+    return (
+        <div className="lb-radial-wrap" ref={ref} style={{ width: size, height: size }}>
+            <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+                <circle className="lb-radial-bg" cx={size/2} cy={size/2} r={r} />
+                <circle className="lb-radial-bar" cx={size/2} cy={size/2} r={r}
+                    stroke={color} strokeDasharray={circ} strokeDashoffset={offset} />
+            </svg>
+            <div className="lb-radial-avatar">
+                {children}
+            </div>
+        </div>
+    );
+}
+
+/* ─── Breakdown Progress Bars ─── */
+function ScoreBreakdownBars({ breakdown, maxScore }) {
+    const [animated, setAnimated] = useState(false);
+    const ref = useRef(null);
+    const cats = [
+        { key: 'posts', icon: 'fas fa-pen', label: 'Posts', color: 'var(--accent)', weight: 3 },
+        { key: 'resources', icon: 'fas fa-file-alt', label: 'Resources', color: 'var(--purple)', weight: 4 },
+        { key: 'projects', icon: 'fas fa-project-diagram', label: 'Projects', color: 'var(--cyan)', weight: 5 },
+        { key: 'comments', icon: 'fas fa-comment', label: 'Comments', color: 'var(--green)', weight: 1 },
+        { key: 'activities', icon: 'fas fa-bolt', label: 'Activities', color: 'var(--amber)', weight: 2 },
+    ];
+    const maxCatScore = Math.max(...cats.map(c => (breakdown[c.key] || 0) * c.weight), 1);
+
+    useEffect(() => {
+        const el = ref.current; if (!el) return;
+        const io = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) { setTimeout(() => setAnimated(true), 300); io.unobserve(el); }
+        }, { threshold: 0.2 });
+        io.observe(el);
+        return () => io.disconnect();
+    }, []);
+
+    return (
+        <div ref={ref} style={{ width: '100%', padding: '0 0.25rem' }}>
+            {cats.filter(c => breakdown[c.key] > 0).map(c => {
+                const val = (breakdown[c.key] || 0) * c.weight;
+                const pct = (val / maxCatScore) * 100;
+                return (
+                    <div className="lb-progress-row" key={c.key}>
+                        <span className="lb-progress-label"><i className={c.icon} style={{ fontSize: '0.55rem', color: c.color }} />{c.label}</span>
+                        <div className="lb-progress-track">
+                            <div className="lb-progress-fill" style={{ width: animated ? `${pct}%` : '0%', background: `linear-gradient(90deg, ${c.color}, ${c.color}88)` }} />
+                        </div>
+                        <span className="lb-progress-val">{breakdown[c.key]}</span>
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
+/* ─── Activity Mini Chart ─── */
+function ActivityChart({ breakdown }) {
+    const [animated, setAnimated] = useState(false);
+    const ref = useRef(null);
+    const cats = [
+        { key: 'posts', color: 'var(--accent)', weight: 3 },
+        { key: 'comments', color: 'var(--green)', weight: 1 },
+        { key: 'resources', color: 'var(--purple)', weight: 4 },
+        { key: 'projects', color: 'var(--cyan)', weight: 5 },
+        { key: 'activities', color: 'var(--amber)', weight: 2 },
+    ];
+    const maxH = 32;
+    const maxVal = Math.max(...cats.map(c => (breakdown[c.key] || 0) * c.weight), 1);
+
+    useEffect(() => {
+        const el = ref.current; if (!el) return;
+        const io = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) { setTimeout(() => setAnimated(true), 400); io.unobserve(el); }
+        }, { threshold: 0.3 });
+        io.observe(el);
+        return () => io.disconnect();
+    }, []);
+
+    return (
+        <div className="lb-chart" ref={ref}>
+            {cats.map((c, i) => {
+                const val = (breakdown[c.key] || 0) * c.weight;
+                const h = Math.max((val / maxVal) * maxH, 3);
+                return (
+                    <div key={c.key} className="lb-chart-bar" title={`${c.key}: ${breakdown[c.key] || 0}`}
+                        style={{
+                            height: animated ? h : 3,
+                            background: `linear-gradient(to top, ${c.color}, ${c.color}88)`,
+                            transitionDelay: `${i * 0.08}s`,
+                        }} />
+                );
+            })}
+        </div>
+    );
+}
+
 /* ═══════════════════════════════════════════
    HOME PAGE
    ═══════════════════════════════════════════ */
@@ -542,10 +864,14 @@ export default function Home() {
     const [stats, setStats] = useState({ communities: 0, projects: 0, resources: 0, users: 0 });
     const [projects, setProjects] = useState([]);
     const [wordsIn, setWordsIn] = useState(false);
+    const [topContributors, setTopContributors] = useState([]);
+    const [topProjects, setTopProjects] = useState([]);
 
     useEffect(() => {
         api.get('/stats').then(r => setStats(r.data)).catch(() => { });
         api.get('/projects/featured').then(r => setProjects(Array.isArray(r.data) ? r.data : [])).catch(() => { });
+        api.get('/stats/leaderboard/community?limit=6').then(r => setTopContributors(Array.isArray(r.data) ? r.data : [])).catch(() => { });
+        api.get('/stats/leaderboard/projects?limit=5').then(r => setTopProjects(Array.isArray(r.data) ? r.data : [])).catch(() => { });
         const t = setTimeout(() => setWordsIn(true), 180);
         return () => clearTimeout(t);
     }, []);
@@ -554,6 +880,8 @@ export default function Home() {
     const featRef = useReveal();
     const stepsRef = useReveal();
     const testiRef = useReveal();
+    const contribRef = useReveal();
+    const projLbRef = useReveal();
     const projRef = useReveal();
     const ctaRef = useReveal();
 
@@ -818,6 +1146,226 @@ export default function Home() {
                         <div className="g3">
                             {testimonials.map((t, i) => <TestiCard key={i} t={t} />)}
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ━━━ COMMUNITY CONTRIBUTORS LEADERBOARD ━━━ */}
+            <section style={{ padding: '6rem 2rem', borderTop: '1px solid var(--border)', background: 'var(--bg-subtle)' }}>
+                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+                    <div ref={contribRef} className="sr">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem', marginBottom: '2.5rem' }}>
+                            <div>
+                                <div className="section-label">Leaderboard</div>
+                                <h2 style={{ fontSize: 'clamp(1.5rem, 2.8vw, 2rem)', fontWeight: '900', color: 'var(--text-primary)', lineHeight: 1.2, marginBottom: '0.4rem' }}>
+                                    Top <span className="grad">Contributors.</span>
+                                </h2>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Members making the biggest impact across communities.</p>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: '600' }}>
+                                <i className="fas fa-trophy" style={{ color: 'var(--amber)', fontSize: '0.8rem' }} />
+                                Based on posts, resources, projects & activities
+                            </div>
+                        </div>
+
+                        {topContributors.length === 0 ? (
+                            <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '4rem 2rem', textAlign: 'center', boxShadow: 'var(--shadow-sm)' }}>
+                                <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'var(--accent-soft)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: 'var(--accent)', fontSize: '1.75rem' }}>
+                                    <i className="fas fa-medal" />
+                                </div>
+                                <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>Be the first contributor!</h3>
+                                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', maxWidth: 400, margin: '0 auto' }}>Start posting, sharing resources, and building projects to climb the leaderboard.</p>
+                            </div>
+                        ) : (() => {
+                            const maxScore = topContributors[0]?.score || 1;
+                            return (
+                            <>
+                                {/* Top 3 podium cards with radial gauges */}
+                                <div className="lb-hero-grid">
+                                    {topContributors.slice(0, 3).map((c, i) => {
+                                        const medalClass = ['gold', 'silver', 'bronze'][i];
+                                        const medalColors = ['#f59e0b', '#94a3b8', '#fb923c'];
+                                        return (
+                                            <Link to={`/profile/${c.username}`} key={c.userId} className={`lb-hero-card ${medalClass}`} style={{ textDecoration: 'none' }}>
+                                                <div className={`lb-medal ${medalClass}`}>{i + 1}</div>
+
+                                                {/* Radial score ring with avatar centered inside */}
+                                                <RadialProgress score={c.score} maxScore={maxScore} color={medalColors[i]} size={100}>
+                                                    {c.profileImage ? (
+                                                        <img src={getMediaUrl(c.profileImage)} alt={c.fullName}
+                                                            style={{ border: `3px solid ${medalColors[i]}30` }} />
+                                                    ) : (
+                                                        <div className="lb-avatar-initial"
+                                                            style={{ border: `3px solid ${medalColors[i]}30` }}>
+                                                            {c.fullName?.[0] || '?'}
+                                                        </div>
+                                                    )}
+                                                </RadialProgress>
+
+                                                <h4 style={{ fontWeight: '800', color: 'var(--text-primary)', fontSize: '0.95rem', marginBottom: '0.15rem' }}>{c.fullName}</h4>
+                                                <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>@{c.username}</p>
+                                                <div className="lb-score">
+                                                    <i className="fas fa-bolt" style={{ fontSize: '0.6rem' }} />
+                                                    {c.score} pts
+                                                </div>
+
+                                                {/* Animated breakdown progress bars */}
+                                                <div style={{ marginTop: '0.6rem' }}>
+                                                    <ScoreBreakdownBars breakdown={c.breakdown} maxScore={maxScore} />
+                                                </div>
+
+                                                {/* Activity mini chart */}
+                                                <ActivityChart breakdown={c.breakdown} />
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Remaining contributors with inline progress */}
+                                {topContributors.length > 3 && (
+                                    <div className="lb-rest-list">
+                                        {topContributors.slice(3).map(c => (
+                                            <Link to={`/profile/${c.username}`} key={c.userId} className="lb-rest-item" style={{ textDecoration: 'none' }}>
+                                                <div className="lb-rank-badge">#{c.rank}</div>
+                                                {c.profileImage ? (
+                                                    <img src={getMediaUrl(c.profileImage)} alt={c.fullName} className="lb-rest-avatar" />
+                                                ) : (
+                                                    <div className="lb-rest-avatar-placeholder">{c.fullName?.[0] || '?'}</div>
+                                                )}
+                                                <div style={{ flex: 1, minWidth: 0 }}>
+                                                    <div style={{ fontWeight: '700', color: 'var(--text-primary)', fontSize: '0.88rem' }}>{c.fullName}</div>
+                                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>@{c.username}</div>
+                                                </div>
+                                                {/* Inline score bar */}
+                                                <div className="lb-rest-progress">
+                                                    <div className="lb-rest-track">
+                                                        <div className="lb-rest-fill" style={{
+                                                            width: `${Math.min((c.score / maxScore) * 100, 100)}%`,
+                                                            background: 'linear-gradient(90deg, var(--accent), var(--purple))',
+                                                        }} />
+                                                    </div>
+                                                </div>
+                                                <div className="lb-score" style={{ marginTop: 0 }}>
+                                                    <i className="fas fa-bolt" style={{ fontSize: '0.55rem' }} />
+                                                    {c.score} pts
+                                                </div>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+                            </>
+                            );
+                        })()}
+                    </div>
+                </div>
+            </section>
+
+            {/* ━━━ PROJECT LEADERBOARD ━━━ */}
+            <section style={{ padding: '6rem 2rem', borderTop: '1px solid var(--border)' }}>
+                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+                    <div ref={projLbRef} className="sr">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem', marginBottom: '2.5rem' }}>
+                            <div>
+                                <div className="section-label">Projects</div>
+                                <h2 style={{ fontSize: 'clamp(1.5rem, 2.8vw, 2rem)', fontWeight: '900', color: 'var(--text-primary)', lineHeight: 1.2, marginBottom: '0.4rem' }}>
+                                    Most Active <span className="grad">Projects.</span>
+                                </h2>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Projects with the most updates, resources, and engagement.</p>
+                            </div>
+                            <Link to="/projects" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                                onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
+                                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                            >
+                                View all <i className="fas fa-arrow-right" style={{ fontSize: '0.68rem' }} />
+                            </Link>
+                        </div>
+
+                        {topProjects.length === 0 ? (
+                            <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '4rem 2rem', textAlign: 'center', boxShadow: 'var(--shadow-sm)' }}>
+                                <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'var(--accent-soft)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: 'var(--accent)', fontSize: '1.75rem' }}>
+                                    <i className="fas fa-rocket" />
+                                </div>
+                                <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>No projects yet</h3>
+                                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', maxWidth: 400, margin: '0 auto' }}>Create a project and start building to appear on this leaderboard.</p>
+                            </div>
+                        ) : (() => {
+                            const maxUpdates = Math.max(...topProjects.map(p => p.totalUpdates), 1);
+                            return (
+                            <div className="plb-list">
+                                {topProjects.map((p, i) => {
+                                    const rankClass = i < 3 ? `r${i + 1}` : '';
+                                    const statusColors = { active: 'var(--green)', planning: 'var(--amber)', completed: 'var(--accent)', in_progress: 'var(--cyan)', on_hold: 'var(--text-muted)' };
+                                    const sc = statusColors[p.status] || 'var(--green)';
+                                    const pct = (p.totalUpdates / maxUpdates) * 100;
+                                    const barColors = ['linear-gradient(90deg, #f59e0b, #eab308)', 'linear-gradient(90deg, #94a3b8, #64748b)', 'linear-gradient(90deg, #fb923c, #ea580c)', 'linear-gradient(90deg, var(--accent), var(--purple))', 'linear-gradient(90deg, var(--cyan), var(--accent))'];
+                                    return (
+                                        <Link to={`/projects/${p.projectId}`} key={p.projectId} className="plb-item" style={{ flexWrap: 'wrap' }}>
+                                            <div className={`plb-rank ${rankClass}`}>{i + 1}</div>
+                                            {p.image ? (
+                                                <img src={getMediaUrl(p.image)} alt={p.name} className="plb-thumb" />
+                                            ) : (
+                                                <div className="plb-thumb-placeholder"><i className="fas fa-project-diagram" /></div>
+                                            )}
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem', flexWrap: 'wrap' }}>
+                                                    <h4 style={{ fontWeight: '800', color: 'var(--text-primary)', fontSize: '0.95rem', margin: 0 }}>{p.name}</h4>
+                                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.62rem', fontWeight: '700', color: sc, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: sc }} />
+                                                        {(p.status || 'active').replace('_', ' ')}
+                                                    </span>
+                                                </div>
+                                                <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', margin: 0 }}>{p.description}</p>
+                                                {/* Progress bar showing relative activity */}
+                                                <div className="plb-progress-wrap">
+                                                    <div className="plb-progress-track">
+                                                        <div className="plb-progress-fill" style={{ width: `${pct}%`, background: barColors[i] || barColors[3] }} />
+                                                    </div>
+                                                </div>
+                                                {/* Member avatar stack */}
+                                                <div className="plb-avatar-stack">
+                                                    {p.members.slice(0, 4).map((m, mi) => (
+                                                        m.profileImage ? (
+                                                            <img key={mi} src={getMediaUrl(m.profileImage)} alt={m.fullName} />
+                                                        ) : (
+                                                            <div key={mi} className="plb-avs-ph">{m.fullName?.[0] || '?'}</div>
+                                                        )
+                                                    ))}
+                                                    {p.memberCount > 4 && <div className="plb-avs-ph">+{p.memberCount - 4}</div>}
+                                                </div>
+                                            </div>
+                                            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                                                <div className="plb-updates-pill">
+                                                    <i className="fas fa-sync-alt" style={{ fontSize: '0.58rem' }} />
+                                                    {p.totalUpdates} updates
+                                                </div>
+                                                {/* Mini stat counters */}
+                                                <div className="plb-stats-row" style={{ marginTop: '0.45rem', justifyContent: 'flex-end' }}>
+                                                    {p.breakdown.posts > 0 && (
+                                                        <div className="plb-stat-mini">
+                                                            <span className="plb-stat-mini-val" style={{ color: 'var(--accent)' }}>{p.breakdown.posts}</span>
+                                                            <span className="plb-stat-mini-lbl"><i className="fas fa-pen" style={{ fontSize: '0.5rem', marginRight: 2 }} />Posts</span>
+                                                        </div>
+                                                    )}
+                                                    {p.breakdown.resources > 0 && (
+                                                        <div className="plb-stat-mini">
+                                                            <span className="plb-stat-mini-val" style={{ color: 'var(--purple)' }}>{p.breakdown.resources}</span>
+                                                            <span className="plb-stat-mini-lbl"><i className="fas fa-file-alt" style={{ fontSize: '0.5rem', marginRight: 2 }} />Res</span>
+                                                        </div>
+                                                    )}
+                                                    {p.breakdown.files > 0 && (
+                                                        <div className="plb-stat-mini">
+                                                            <span className="plb-stat-mini-val" style={{ color: 'var(--cyan)' }}>{p.breakdown.files}</span>
+                                                            <span className="plb-stat-mini-lbl"><i className="fas fa-paperclip" style={{ fontSize: '0.5rem', marginRight: 2 }} />Files</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                            );
+                        })()}
                     </div>
                 </div>
             </section>
