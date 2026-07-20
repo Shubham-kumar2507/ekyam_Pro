@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import PostCard from '../components/PostCard';
@@ -32,16 +32,19 @@ export default function Feed() {
             if (tab === 'feed' && user) { res = await api.get('/posts/feed'); setPosts(res.data.posts || []); }
             else if (tab === 'my' && user) { res = await api.get(`/posts/user/${user._id}`); setPosts(res.data || []); }
             else { res = await api.get('/posts/all'); setPosts(res.data.posts || []); }
-        } catch (err) { console.error(err); }
+        } catch (_err) { console.error(_err); }
         setLoading(false);
     }, [tab, user]);
 
     useEffect(() => {
-        fetchPosts();
-        if (user) {
-            api.get('/projects/my').then(r => setProjects(r.data)).catch(() => { });
-            api.get('/communities').then(r => setCommunities(r.data)).catch(() => { });
-        }
+        const id = setTimeout(() => {
+            fetchPosts();
+            if (user) {
+                api.get('/projects/my').then(r => setProjects(r.data)).catch(() => { });
+                api.get('/communities').then(r => setCommunities(r.data)).catch(() => { });
+            }
+        }, 0);
+        return () => clearTimeout(id);
     }, [fetchPosts, user]);
 
     const handleFileChange = (e) => {
@@ -69,7 +72,7 @@ export default function Feed() {
             const { data } = await api.post('/posts', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
             setPosts(prev => [data, ...prev]);
             setContent(''); setFiles([]); setFilePreviews([]); setProject(''); setCommunity(''); setPostType('individual'); setShowCreateForm(false);
-        } catch (err) { alert(err.response?.data?.message || 'Error creating post'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error creating post'); }
         setSubmitting(false);
     };
 

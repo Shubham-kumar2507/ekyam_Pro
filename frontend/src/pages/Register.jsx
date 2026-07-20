@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 
 export default function Register() {
@@ -21,8 +21,8 @@ export default function Register() {
         try {
             await register({ username: form.username, email: form.email, password: form.password, fullName: form.fullName, userType: form.userType, location: form.location });
             navigate(`/verify-email?email=${encodeURIComponent(form.email)}`);
-        } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed. Please try again.');
+        } catch (_err) {
+            setError(_err.response?.data?.message || 'Registration failed. Please try again.');
         } finally { setLoading(false); }
     };
 

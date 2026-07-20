@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 
 /* ═══════════════════════════════════════════
@@ -255,9 +255,9 @@ export default function Login() {
         try {
             await login(form.username, form.password);
             navigate('/dashboard');
-        } catch (err) {
-            const data = err.response?.data;
-            if (err.response?.status === 403 && data?.requiresVerification) {
+        } catch (_err) {
+            const data = _err.response?.data;
+            if (_err.response?.status === 403 && data?.requiresVerification) {
                 navigate(`/verify-email?email=${encodeURIComponent(data.email)}`);
             } else {
                 setError(data?.message || 'Login failed. Please try again.');

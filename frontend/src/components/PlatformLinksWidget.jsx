@@ -66,8 +66,8 @@ export default function PlatformLinksWidget({ socialLinks, theme, showStats = tr
             const { data } = await api.get(url);
             setStats(data);
             setLastUpdated(new Date());
-        } catch (err) {
-            console.error('Failed to fetch platform stats:', err);
+            } catch (_err) {
+            console.error('Failed to fetch platform stats:', _err);
         }
         setLoadingStats(false);
     };

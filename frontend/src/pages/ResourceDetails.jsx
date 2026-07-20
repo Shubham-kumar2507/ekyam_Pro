@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import { getMediaUrl } from '../utils/media';
@@ -25,7 +25,7 @@ export default function ResourceDetails() {
             const fileUrl = resource.filePath ? getMediaUrl(resource.filePath) : resource.url;
             if (fileUrl) window.open(fileUrl, '_blank');
             else alert('No file or URL attached to this resource.');
-        } catch (err) { /* */ }
+        } catch { /* ignore */ }
     };
 
     const isOwner = user && resource && (resource.uploadedBy === user._id || resource.uploadedBy?._id === user._id);
@@ -39,7 +39,7 @@ export default function ResourceDetails() {
             files.forEach(f => formData.append('files', f));
             const { data } = await api.post(`/resources/${id}/files`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
             setResource(prev => ({ ...prev, files: data.files }));
-        } catch (err) { alert(err.response?.data?.message || 'Error uploading files'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error uploading files'); }
         setFilesUploading(false);
     };
 
@@ -48,7 +48,7 @@ export default function ResourceDetails() {
         try {
             const { data } = await api.delete(`/resources/${id}/files/${idx}`);
             setResource(prev => ({ ...prev, files: data.files }));
-        } catch (err) { alert(err.response?.data?.message || 'Error deleting file'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error deleting file'); }
     };
 
     if (loading) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}><i className="fas fa-spinner fa-spin" style={{ fontSize: '2rem', color: '#0891b2' }}></i></div>;

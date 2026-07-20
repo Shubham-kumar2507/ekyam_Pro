@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/useTheme';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import api from '../api/api';
 
 /* ─── Notification type config ─── */
@@ -49,9 +49,9 @@ export default function NotificationDropdown({ isLightHome = false }) {
     }, [user]);
 
     useEffect(() => {
-        fetchUnreadCount();
+        const t = setTimeout(() => { fetchUnreadCount(); }, 0);
         const interval = setInterval(fetchUnreadCount, 30000); // every 30s
-        return () => clearInterval(interval);
+        return () => { clearTimeout(t); clearInterval(interval); };
     }, [fetchUnreadCount]);
 
     // Fetch full list when dropdown opens

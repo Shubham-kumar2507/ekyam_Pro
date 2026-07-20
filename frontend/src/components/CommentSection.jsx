@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import { getMediaUrl } from '../utils/media';
@@ -37,7 +37,7 @@ export default function CommentSection({ postId, onCommentCountChange }) {
             setComments(prev => [...prev, data]);
             setContent('');
             onCommentCountChange?.(comments.length + 1);
-        } catch (err) { console.error(err); }
+        } catch (_err) { console.error(_err); }
         setSubmitting(false);
     };
 
@@ -47,7 +47,7 @@ export default function CommentSection({ postId, onCommentCountChange }) {
             const updated = comments.filter(c => c._id !== commentId);
             setComments(updated);
             onCommentCountChange?.(updated.length);
-        } catch (err) { console.error(err); }
+        } catch (_err) { console.error(_err); }
     };
 
     const avatarSmall = {

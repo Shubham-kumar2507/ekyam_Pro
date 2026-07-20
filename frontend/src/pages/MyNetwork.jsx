@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import UserCard from '../components/UserCard';
@@ -29,12 +29,13 @@ export default function MyNetwork() {
             setFollowers(followersRes.data);
             setFollowing(followingRes.data);
             setRequests(requestsRes.data);
-        } catch (err) { console.error(err); }
+        } catch (_err) { console.error(_err); }
         setLoading(false);
     }, [user]);
 
     useEffect(() => {
-        if (user) fetchData();
+        const id = setTimeout(() => { if (user) fetchData(); }, 0);
+        return () => clearTimeout(id);
     }, [user, fetchData]);
 
     const handleSearch = async (q) => {
@@ -44,7 +45,7 @@ export default function MyNetwork() {
         try {
             const { data } = await api.get(`/connections/search?q=${encodeURIComponent(q)}`);
             setSearchResults(data);
-        } catch (err) { console.error(err); }
+        } catch (_err) { console.error(_err); }
         setSearchLoading(false);
     };
 
@@ -53,11 +54,10 @@ export default function MyNetwork() {
             await api.put(`/connections/respond/${connectionId}`, { action });
             setRequests(prev => prev.filter(r => r._id !== connectionId));
             if (action === 'accept') fetchData();
-        } catch (err) { alert(err.response?.data?.message || 'Error'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error'); }
     };
 
     const tabBtn = (active) => ({
-        padding: '0.55rem 1.2rem', border: 'none', borderRadius: '10px',
         background: active ? theme.tabActiveBg : 'transparent',
         color: active ? theme.tabActiveText : theme.tabInactiveText,
         fontWeight: '600', fontSize: '0.88rem', cursor: 'pointer',

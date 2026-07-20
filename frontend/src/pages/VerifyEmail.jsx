@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 
 /* ═══════════════════════════════════════════
@@ -339,8 +339,8 @@ export default function VerifyEmail() {
             setVerified(true);
             setSuccess('Email verified successfully! Redirecting...');
             setTimeout(() => navigate('/dashboard'), 1500);
-        } catch (err) {
-            setError(err.response?.data?.message || 'Verification failed. Please try again.');
+        } catch (_err) {
+            setError(_err.response?.data?.message || 'Verification failed. Please try again.');
             // Clear OTP inputs on error
             setOtp(['', '', '', '', '', '']);
             inputRefs.current[0]?.focus();
@@ -359,8 +359,8 @@ export default function VerifyEmail() {
             setOtp(['', '', '', '', '', '']);
             inputRefs.current[0]?.focus();
             setTimeout(() => setSuccess(''), 4000);
-        } catch (err) {
-            setError(err.response?.data?.message || 'Failed to resend code. Please try again.');
+        } catch (_err) {
+            setError(_err.response?.data?.message || 'Failed to resend code. Please try again.');
         }
     };
 

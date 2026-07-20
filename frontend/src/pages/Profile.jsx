@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import { getMediaUrl } from '../utils/media';
@@ -36,7 +36,7 @@ export default function Profile() {
             const { data } = await api.put('/users/profile', { ...form, socialLinks });
             updateUser(data);
             setMsg('Profile updated successfully!');
-        } catch (err) { setError(err.response?.data?.message || 'Error updating profile'); }
+        } catch (_err) { setError(_err.response?.data?.message || 'Error updating profile'); }
         setLoading(false);
     };
 
@@ -50,7 +50,7 @@ export default function Profile() {
             const { data } = await api.post('/users/profile/picture', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
             updateUser(data);
             setMsg('Profile picture updated!');
-        } catch (err) { setError(err.response?.data?.message || 'Error uploading picture'); }
+        } catch (_err) { setError(_err.response?.data?.message || 'Error uploading picture'); }
         setUploadingPic(false);
     };
 
@@ -188,7 +188,7 @@ export default function Profile() {
                                         const { data } = await api.put('/users/profile', { ...form, socialLinks });
                                         updateUser(data);
                                         setMsg('Social links saved successfully!');
-                                    } catch (err) { setError(err.response?.data?.message || 'Error saving links'); }
+                                    } catch (_err) { setError(_err.response?.data?.message || 'Error saving links'); }
                                     setLoading(false);
                                 }}
                                 disabled={loading}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/api';
 import { getMediaUrl } from '../utils/media';
@@ -773,7 +773,7 @@ function RadialProgress({ score, maxScore, color, size = 100, children }) {
 }
 
 /* ─── Breakdown Progress Bars ─── */
-function ScoreBreakdownBars({ breakdown, maxScore }) {
+function ScoreBreakdownBars({ breakdown, maxScore: _maxScore }) {
     const [animated, setAnimated] = useState(false);
     const ref = useRef(null);
     const cats = [
@@ -1072,7 +1072,7 @@ export default function Home() {
                             nothing you don't.
                         </p>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                            {features.map((f, i) => <FeatRow key={f.title} {...f} />)}
+                            {features.map((f, _i) => <FeatRow key={f.title} {...f} />)}
                         </div>
                     </div>
 

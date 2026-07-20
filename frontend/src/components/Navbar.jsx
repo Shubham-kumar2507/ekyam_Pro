@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 import NotificationDropdown from './NotificationDropdown';
 
@@ -25,7 +25,10 @@ export default function Navbar() {
     }, [dropOpen]);
 
     // Close mobile menu on route change
-    useEffect(() => { setMenuOpen(false); setDropOpen(false); }, [location.pathname]);
+    useEffect(() => {
+        const id = setTimeout(() => { setMenuOpen(false); setDropOpen(false); }, 0);
+        return () => clearTimeout(id);
+    }, [location.pathname]);
 
     const isHome = location.pathname === '/';
     const isLightHome = isHome && mode === 'light';

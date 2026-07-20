@@ -13,7 +13,7 @@ export default function Footer() {
         try {
             const { data } = await api.post('/newsletter/subscribe', { email });
             setMsg(data.message); setEmail('');
-        } catch (err) { setMsg(err.response?.data?.message || 'Error subscribing'); }
+        } catch (_err) { setMsg(_err.response?.data?.message || 'Error subscribing'); }
     };
 
     const footerStyle = { background: theme.footerBg, color: '#fff', padding: '3rem 0 0', transition: 'background-color 0.3s ease' };

@@ -1,20 +1,18 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { useState } from 'react';
 import api from '../api/api';
-
-const AuthContext = createContext();
+import { AuthContext } from './AuthContextValue';
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const token = localStorage.getItem('ekyam_token');
-        const stored = localStorage.getItem('ekyam_user');
-        if (token && stored) {
-            setUser(JSON.parse(stored));
+    const [user, setUser] = useState(() => {
+        try {
+            const token = localStorage.getItem('ekyam_token');
+            const stored = localStorage.getItem('ekyam_user');
+            return token && stored ? JSON.parse(stored) : null;
+        } catch {
+            return null;
         }
-        setLoading(false);
-    }, []);
+    });
+    const [loading] = useState(false);
 
     const login = async (username, password) => {
         const { data } = await api.post('/auth/login', { username, password });
@@ -63,4 +61,4 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
+// `useAuth` hook lives in ./useAuth.js to keep this file fast-refresh compliant

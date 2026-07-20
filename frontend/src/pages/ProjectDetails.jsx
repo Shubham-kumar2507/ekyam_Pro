@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import PostCard from '../components/PostCard';
@@ -52,7 +52,7 @@ export default function ProjectDetails() {
             setMyRequest({ status: 'pending', reason: joinReason.trim() });
             setShowJoinModal(false);
             setJoinReason('');
-        } catch (err) { alert(err.response?.data?.message || 'Error'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error'); }
         setJoinSubmitting(false);
     };
 
@@ -63,19 +63,19 @@ export default function ProjectDetails() {
             // Refresh project to update members
             const { data } = await api.get(`/projects/${id}`);
             setProject(data);
-        } catch (err) { alert(err.response?.data?.message || 'Error'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error'); }
     };
 
     const handleRejectRequest = async (requestId) => {
         try {
             await api.put(`/projects/${id}/join-requests/${requestId}/reject`);
             setJoinRequests(prev => prev.filter(r => r._id !== requestId));
-        } catch (err) { alert(err.response?.data?.message || 'Error'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error'); }
     };
 
     const handleDelete = async () => {
         if (window.confirm('Delete this project?')) {
-            try { await api.delete(`/projects/${id}`); navigate('/projects'); } catch (err) { alert(err.response?.data?.message || 'Error'); }
+            try { await api.delete(`/projects/${id}`); navigate('/projects'); } catch (_err) { alert(_err.response?.data?.message || 'Error'); }
         }
     };
 
@@ -88,7 +88,7 @@ export default function ProjectDetails() {
             formData.append('image', file);
             const { data } = await api.put(`/projects/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
             setProject(prev => ({ ...prev, image: data.image }));
-        } catch (err) { alert(err.response?.data?.message || 'Error uploading image'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error uploading image'); }
         setUploading(false);
     };
 
@@ -103,7 +103,7 @@ export default function ProjectDetails() {
             files.forEach(f => formData.append('files', f));
             const { data } = await api.post(`/projects/${id}/files`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
             setProject(prev => ({ ...prev, files: data.files }));
-        } catch (err) { alert(err.response?.data?.message || 'Error uploading files'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error uploading files'); }
         setFilesUploading(false);
     };
 
@@ -112,7 +112,7 @@ export default function ProjectDetails() {
         try {
             const { data } = await api.delete(`/projects/${id}/files/${idx}`);
             setProject(prev => ({ ...prev, files: data.files }));
-        } catch (err) { alert(err.response?.data?.message || 'Error deleting file'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error deleting file'); }
     };
 
     if (loading) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}><i className="fas fa-spinner fa-spin" style={{ fontSize: '2rem', color: theme.accent }}></i></div>;

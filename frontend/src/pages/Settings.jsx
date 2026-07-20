@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import api from '../api/api';
 
 export default function Settings() {
@@ -19,12 +19,12 @@ export default function Settings() {
             await api.put('/users/password', { currentPassword: pwForm.currentPassword, newPassword: pwForm.newPassword });
             setMsg('Password updated successfully!');
             setPwForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
-        } catch (err) { setError(err.response?.data?.message || 'Error updating password'); }
+        } catch (_err) { setError(_err.response?.data?.message || 'Error updating password'); }
         setLoading(false);
     };
 
     const handleNotifSave = async () => {
-        try { await api.put('/users/settings', notif); updateUser(notif); setMsg('Settings saved!'); } catch (err) { setError('Error saving settings'); }
+        try { await api.put('/users/settings', notif); updateUser(notif); setMsg('Settings saved!'); } catch { setError('Error saving settings'); }
     };
 
     const inputStyle = { width: '100%', padding: '0.7rem 1rem', border: '1px solid #d1d5db', borderRadius: '10px', fontSize: '0.95rem', background: '#f9fafb', outline: 'none' };

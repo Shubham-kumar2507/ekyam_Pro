@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import api from '../api/api';
 import { getMediaUrl } from '../utils/media';
 
@@ -68,7 +68,7 @@ export default function CommunityDetails() {
             setMyRequest({ status: 'pending', reason: joinReason.trim() });
             setShowJoinModal(false);
             setJoinReason('');
-        } catch (err) { alert(err.response?.data?.message || 'Error'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error'); }
         setJoinSubmitting(false);
     };
 
@@ -79,14 +79,14 @@ export default function CommunityDetails() {
             // Refresh community to update members
             const { data } = await api.get(`/communities/${id}`);
             setCommunity(data);
-        } catch (err) { alert(err.response?.data?.message || 'Error'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error'); }
     };
 
     const handleRejectRequest = async (requestId) => {
         try {
             await api.put(`/communities/${id}/join-requests/${requestId}/reject`);
             setJoinRequests(prev => prev.filter(r => r._id !== requestId));
-        } catch (err) { alert(err.response?.data?.message || 'Error'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error'); }
     };
 
     const handleLeave = async () => { if (!confirm('Leave this community?')) return; try { await api.post(`/communities/${id}/leave`); setIsMember(false); } catch { /* silently ignore */ } };

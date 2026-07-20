@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import { getMediaUrl } from '../utils/media';
@@ -28,17 +28,17 @@ export default function UserCard({ userInfo, initialStatus, onStatusChange }) {
 
     const handleFollow = async () => {
         setLoading(true);
-        try { await api.post(`/connections/follow/${userInfo._id}`); setStatus('following'); onStatusChange?.('following'); } catch (err) { console.error(err); }
+        try { await api.post(`/connections/follow/${userInfo._id}`); setStatus('following'); onStatusChange?.('following'); } catch (_err) { console.error(_err); }
         setLoading(false);
     };
     const handleUnfollow = async () => {
         setLoading(true);
-        try { await api.delete(`/connections/unfollow/${userInfo._id}`); setStatus('none'); onStatusChange?.('none'); } catch (err) { console.error(err); }
+        try { await api.delete(`/connections/unfollow/${userInfo._id}`); setStatus('none'); onStatusChange?.('none'); } catch (_err) { console.error(_err); }
         setLoading(false);
     };
     const handleConnect = async () => {
         setLoading(true);
-        try { await api.post(`/connections/connect/${userInfo._id}`); setStatus('pending'); onStatusChange?.('pending'); } catch (err) { console.error(err); }
+        try { await api.post(`/connections/connect/${userInfo._id}`); setStatus('pending'); onStatusChange?.('pending'); } catch (_err) { console.error(_err); }
         setLoading(false);
     };
 

@@ -61,7 +61,7 @@ export default function AdminPanel() {
         try {
             const { data } = await api.get('/admin/stats');
             setStats(data);
-        } catch (err) { showToast(err.response?.data?.message || 'Failed to load stats', 'error'); }
+        } catch (_err) { showToast(_err.response?.data?.message || 'Failed to load stats', 'error'); }
     }, []);
 
     const fetchProjects = useCallback(async () => {
@@ -73,7 +73,7 @@ export default function AdminPanel() {
             if (featuredFilter) params.featured = featuredFilter;
             const { data } = await api.get('/admin/projects', { params });
             setProjects(data);
-        } catch (err) { showToast(err.response?.data?.message || 'Failed to load projects', 'error'); }
+        } catch (_err) { showToast(_err.response?.data?.message || 'Failed to load projects', 'error'); }
         setLoading(false);
     }, [searchTerm, statusFilter, featuredFilter]);
 
@@ -85,7 +85,7 @@ export default function AdminPanel() {
             if (typeFilter) params.type = typeFilter;
             const { data } = await api.get('/admin/resources', { params });
             setResources(data);
-        } catch (err) { showToast(err.response?.data?.message || 'Failed to load resources', 'error'); }
+        } catch (_err) { showToast(_err.response?.data?.message || 'Failed to load resources', 'error'); }
         setLoading(false);
     }, [searchTerm, typeFilter]);
 
@@ -96,21 +96,24 @@ export default function AdminPanel() {
             if (searchTerm) params.search = searchTerm;
             const { data } = await api.get('/admin/users', { params });
             setUsers(data);
-        } catch (err) { showToast(err.response?.data?.message || 'Failed to load users', 'error'); }
+        } catch (_err) { showToast(_err.response?.data?.message || 'Failed to load users', 'error'); }
         setLoading(false);
     }, [searchTerm]);
 
-    useEffect(() => { fetchStats(); }, [fetchStats]);
+    useEffect(() => { const id = setTimeout(fetchStats, 0); return () => clearTimeout(id); }, [fetchStats]);
 
     useEffect(() => {
-        setSearchTerm('');
-        setStatusFilter('');
-        setTypeFilter('');
-        setFeaturedFilter('');
-        if (activeTab === 'projects') fetchProjects();
-        else if (activeTab === 'resources') fetchResources();
-        else if (activeTab === 'users') fetchUsers();
-        else if (activeTab === 'dashboard') fetchStats();
+        const id = setTimeout(() => {
+            setSearchTerm('');
+            setStatusFilter('');
+            setTypeFilter('');
+            setFeaturedFilter('');
+            if (activeTab === 'projects') fetchProjects();
+            else if (activeTab === 'resources') fetchResources();
+            else if (activeTab === 'users') fetchUsers();
+            else if (activeTab === 'dashboard') fetchStats();
+        }, 0);
+        return () => clearTimeout(id);
     }, [activeTab, fetchProjects, fetchResources, fetchStats, fetchUsers]);
 
     useEffect(() => {
@@ -128,7 +131,7 @@ export default function AdminPanel() {
             const { data } = await api.put(`/admin/projects/${id}/feature`);
             showToast(data.message);
             fetchProjects();
-        } catch (err) { showToast(err.response?.data?.message || 'Failed', 'error'); }
+        } catch (_err) { showToast(_err.response?.data?.message || 'Failed', 'error'); }
     };
 
     const changeProjectStatus = async (id, status) => {
@@ -136,7 +139,7 @@ export default function AdminPanel() {
             const { data } = await api.put(`/admin/projects/${id}/status`, { status });
             showToast(data.message);
             fetchProjects();
-        } catch (err) { showToast(err.response?.data?.message || 'Failed', 'error'); }
+        } catch (_err) { showToast(_err.response?.data?.message || 'Failed', 'error'); }
     };
 
     const deleteProject = async (id, name) => {
@@ -146,7 +149,7 @@ export default function AdminPanel() {
             showToast('Project deleted');
             fetchProjects();
             fetchStats();
-        } catch (err) { showToast(err.response?.data?.message || 'Failed', 'error'); }
+        } catch (_err) { showToast(_err.response?.data?.message || 'Failed', 'error'); }
     };
 
     const deleteResource = async (id, title) => {
@@ -156,7 +159,7 @@ export default function AdminPanel() {
             showToast('Resource deleted');
             fetchResources();
             fetchStats();
-        } catch (err) { showToast(err.response?.data?.message || 'Failed', 'error'); }
+        } catch (_err) { showToast(_err.response?.data?.message || 'Failed', 'error'); }
     };
 
     const changeUserRole = async (id, userType) => {
@@ -164,7 +167,7 @@ export default function AdminPanel() {
             const { data } = await api.put(`/admin/users/${id}/role`, { userType });
             showToast(data.message);
             fetchUsers();
-        } catch (err) { showToast(err.response?.data?.message || 'Failed', 'error'); }
+        } catch (_err) { showToast(_err.response?.data?.message || 'Failed', 'error'); }
     };
 
     // ─── Styles ───

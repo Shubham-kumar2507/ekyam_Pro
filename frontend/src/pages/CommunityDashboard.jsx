@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import api from '../api/api';
 import { getMediaUrl } from '../utils/media';
 
@@ -112,7 +112,7 @@ export default function CommunityDashboard() {
             });
             setCommunity(prev => ({ ...prev, ...data }));
             setShowEditModal(false);
-        } catch (err) { alert(err.response?.data?.message || 'Error updating community'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error updating community'); }
         setEditSaving(false);
     };
 

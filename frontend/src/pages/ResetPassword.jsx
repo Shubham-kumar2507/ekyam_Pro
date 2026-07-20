@@ -29,8 +29,8 @@ export default function ResetPassword() {
             const { data } = await api.post('/auth/reset-password', { token, newPassword });
             setMessage(data.message);
             setTimeout(() => navigate('/login'), 3000);
-        } catch (err) {
-            setError(err.response?.data?.message || 'Something went wrong. Please try again.');
+        } catch (_err) {
+            setError(_err.response?.data?.message || 'Something went wrong. Please try again.');
         }
         setLoading(false);
     };

@@ -67,7 +67,7 @@ export default function Notifications() {
         setLoading(false);
     };
 
-    useEffect(() => { fetchNotifications(); }, []);
+    useEffect(() => { const id = setTimeout(() => fetchNotifications(), 0); return () => clearTimeout(id); }, []);
 
     const markAsRead = async (id) => {
         try {

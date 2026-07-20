@@ -46,7 +46,7 @@ export default function CreateCommunity() {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             navigate(`/communities/${data._id}`);
-        } catch (err) { setError(err.response?.data?.message || 'Error creating community'); }
+        } catch (_err) { setError(_err.response?.data?.message || 'Error creating community'); }
         setLoading(false);
     };
 

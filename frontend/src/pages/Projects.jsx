@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import { getMediaUrl } from '../utils/media';
@@ -39,8 +39,8 @@ export default function Projects() {
             setProjects(prev => prev.map(p => p._id === joinProjectId ? { ...p, members: [...(p.members || []), user._id] } : p));
             setJoinProjectId(null);
             setJoinReason('');
-        } catch (err) {
-            alert(err.response?.data?.message || 'Error');
+        } catch (_err) {
+            alert(_err.response?.data?.message || 'Error');
         }
         setJoinSubmitting(false);
     };

@@ -37,7 +37,7 @@ export default function CreateResource() {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             navigate(`/resources/${data._id}`);
-        } catch (err) { setError(err.response?.data?.message || 'Error creating resource'); }
+        } catch (_err) { setError(_err.response?.data?.message || 'Error creating resource'); }
         setLoading(false);
     };
 

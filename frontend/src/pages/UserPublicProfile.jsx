@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import PostCard from '../components/PostCard';
@@ -34,26 +34,27 @@ export default function UserPublicProfile() {
                 const statusRes = await api.get(`/connections/status/${id}`);
                 setStatus(statusRes.data.status);
             }
-        } catch (err) { console.error(err); }
+        } catch (_err) { console.error(_err); }
         setLoading(false);
     }, [id, user]);
 
     useEffect(() => {
-        fetchProfile();
+        const id = setTimeout(() => fetchProfile(), 0);
+        return () => clearTimeout(id);
     }, [fetchProfile]);
 
     const fetchFollowers = async () => {
         try {
             const res = await api.get(`/connections/followers/${id}`);
             setFollowers(res.data);
-        } catch (err) { console.error(err); }
+        } catch (_err) { console.error(_err); }
     };
 
     const fetchFollowing = async () => {
         try {
             const res = await api.get(`/connections/following/${id}`);
             setFollowing(res.data);
-        } catch (err) { console.error(err); }
+        } catch (_err) { console.error(_err); }
     };
 
     const handleFollow = async () => {
@@ -62,7 +63,7 @@ export default function UserPublicProfile() {
             await api.post(`/connections/follow/${id}`);
             setStatus('following');
             setProfile(p => ({ ...p, followerCount: (p.followerCount || 0) + 1 }));
-        } catch (err) { alert(err.response?.data?.message || 'Error'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error'); }
         setStatusLoading(false);
     };
 
@@ -72,7 +73,7 @@ export default function UserPublicProfile() {
             await api.delete(`/connections/unfollow/${id}`);
             setStatus('none');
             setProfile(p => ({ ...p, followerCount: Math.max(0, (p.followerCount || 1) - 1) }));
-        } catch (err) { alert(err.response?.data?.message || 'Error'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error'); }
         setStatusLoading(false);
     };
 
@@ -81,7 +82,7 @@ export default function UserPublicProfile() {
         try {
             await api.post(`/connections/connect/${id}`);
             setStatus('pending');
-        } catch (err) { alert(err.response?.data?.message || 'Error'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error'); }
         setStatusLoading(false);
     };
 

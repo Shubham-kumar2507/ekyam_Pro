@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import { getMediaUrl } from '../utils/media';
@@ -25,7 +25,7 @@ export default function Dashboard() {
                 setProjects(pRes.status === 'fulfilled' ? pRes.value.data : []);
                 setCommunities(cRes.status === 'fulfilled' ? cRes.value.data : []);
                 setResources(rRes.status === 'fulfilled' ? rRes.value.data : []);
-            } catch (err) { /* fallback empty */ }
+            } catch { /* fallback empty */ }
             setLoading(false);
         };
         fetchData();

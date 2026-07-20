@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTheme } from '../context/useTheme';
 import api from '../api/api';
 import CommentSection from './CommentSection';
@@ -32,7 +32,7 @@ export default function PostCard({ post, onDelete, onUpdate: _onUpdate }) {
             const { data } = await api.post(`/posts/${post._id}/like`);
             setLiked(data.liked);
             setLikeCount(data.likeCount);
-        } catch (err) { console.error(err); }
+        } catch (_err) { console.error(_err); }
     };
 
     const handleShare = async () => {
@@ -46,7 +46,7 @@ export default function PostCard({ post, onDelete, onUpdate: _onUpdate }) {
             }
             const { data } = await api.post(`/posts/${post._id}/share`);
             setShareCount(data.shareCount);
-        } catch (err) { console.error(err); }
+        } catch (_err) { console.error(_err); }
     };
 
     const handleDelete = async () => {
@@ -54,7 +54,7 @@ export default function PostCard({ post, onDelete, onUpdate: _onUpdate }) {
         try {
             await api.delete(`/posts/${post._id}`);
             onDelete?.(post._id);
-        } catch (err) { alert(err.response?.data?.message || 'Error'); }
+        } catch (_err) { alert(_err.response?.data?.message || 'Error'); }
     };
 
     const openLightbox = (index) => {

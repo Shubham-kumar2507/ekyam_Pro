@@ -49,7 +49,7 @@ export default function CreateProject() {
             }
 
             navigate(`/projects/${data._id}`);
-        } catch (err) { setError(err.response?.data?.message || 'Error creating project'); }
+        } catch (_err) { setError(_err.response?.data?.message || 'Error creating project'); }
         setLoading(false);
     };
 

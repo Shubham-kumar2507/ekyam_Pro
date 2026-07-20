@@ -9,12 +9,12 @@ export default function Newsletter() {
 
     const handleSubscribe = async (e) => {
         e.preventDefault(); setMsg(''); setError('');
-        try { const { data } = await api.post('/newsletter/subscribe', { email }); setMsg(data.message); setEmail(''); } catch (err) { setError(err.response?.data?.message || 'Error subscribing'); }
+        try { const { data } = await api.post('/newsletter/subscribe', { email }); setMsg(data.message); setEmail(''); } catch (_err) { setError(_err.response?.data?.message || 'Error subscribing'); }
     };
 
     const handleUnsubscribe = async (e) => {
         e.preventDefault(); setMsg(''); setError('');
-        try { const { data } = await api.post('/newsletter/unsubscribe', { email: unsubEmail }); setMsg(data.message); setUnsubEmail(''); } catch (err) { setError(err.response?.data?.message || 'Error unsubscribing'); }
+        try { const { data } = await api.post('/newsletter/unsubscribe', { email: unsubEmail }); setMsg(data.message); setUnsubEmail(''); } catch (_err) { setError(_err.response?.data?.message || 'Error unsubscribing'); }
     };
 
     const inputStyle = { flex: 1, padding: '0.85rem 1rem', border: '1px solid #d1d5db', borderRadius: '10px 0 0 10px', fontSize: '0.95rem', outline: 'none' };
